@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_2"
+    tools:context="com.softcaze.nicolas.colorchange.Activity.PlayActivity">
+
+    <RelativeLayout
+        android:id="@+id/relative_first"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:background="@color/grey_claire"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:textSize="20sp"
+            android:layout_marginLeft="-20dp"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:layout_alignBottom="@id/heart"
+            android:textColor="@color/white"
+            android:layout_toRightOf="@id/heart"
+
+            android:text="9:32"/>
+        <ImageView
+            android:id="@+id/heart"
+            android:src="@drawable/heart"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:id="@+id/nbrLife"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/heart"
+            android:layout_alignRight="@id/heart"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:text="10"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:gravity="center"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_tab_play"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_below="@+id/relative_first"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tab_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monde"
+            android:textColor="@color/white"
+            android:textSize="26dp"
+            android:gravity="center"
+            android:background="@drawable/tab_rounded_clicked"
+            android:padding="10dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/grey_2"/>
+
+        <TextView
+            android:id="@+id/tab_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vitesse"
+            android:textColor="@color/white"
+            android:textSize="26dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:background="@drawable/tab_rounded_unclicked"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/container_play"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/menu_tab_play"
+        android:background="@color/red"
+        android:paddingTop="20dp"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/tab_1_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- MONDE 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:layout_weight="1">
+
+                        <RelativeLayout
+                            android:id="@+id/container_monde_1"
+                            android:layout_width="200dp"
+                            android:layout_height="80dp"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/rounded_white">
+
+                            <TextView
+                                android:id="@+id/txt_monde_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/grey_2"
+                                android:text="Monde 1"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="20dp"
+                                android:textSize="22dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/nbr_star_1"
+                                android:layout_below="@+id/txt_monde_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="23"
+                                android:textColor="@color/grey_2"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="20dp"
+                                android:textSize="24dp"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/txt_monde_1"
+                                android:src="@drawable/star"
+                                android:layout_toRightOf="@+id/nbr_star_1"/>
+
+                            <ImageView
+                                android:id="@+id/img_monde_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/golf"
+                                android:layout_alignParentRight="true"
+                                android:layout_margin="10dp"/>
+
+                            <RelativeLayout
+                                android:id="@+id/container_lock_w1"
+                                android:visibility="invisible"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                    <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/rounded_transparent"/>
+
+                                    <ImageView
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:src="@drawable/lock"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginRight="15dp"/>
+
+                                    <TextView
+                                        android:id="@+id/nbr_star_to_lock_1"
+                                        android:layout_marginLeft="20dp"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="17"
+                                        android:textColor="@color/white"
+                                        android:textSize="20dp"/>
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginBottom="2dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_toRightOf="@+id/nbr_star_to_lock_1"
+                                    android:src="@drawable/star"/>
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/circle_w1"
+                            android:layout_width="45dp"
+                            android:layout_height="80dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_centerHorizontal="true"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- LinearLayout Lane yellow horizontal -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2">
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingRight="45dp"
+                        android:layout_weight="1">
+
+                        <View
+                            android:id="@+id/lane_1_w2"
+                            android:layout_width="15dp"
+                            android:layout_height="30dp"
+                            android:background="@color/yellow"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- LinearLayout Lane yellow vertical -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/lane_2_w2"
+                    android:layout_marginLeft="45dp"
+                    android:layout_marginRight="45dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="15dp"
+                    android:background="@color/yellow"
+                    android:layout_weight="2">
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- LinearLayout Lane yellow horizontal -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingLeft="45dp"
+                    android:gravity="left">
+
+                    <View
+                        android:id="@+id/lane_3_w2"
+                        android:layout_width="15dp"
+                        android:layout_height="30dp"
+                        android:background="@color/yellow" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                </RelativeLayout>
+            </LinearLayout>
+
+                <!-- Linear Layout Monde 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:paddingTop="5dp"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/circle_w2"
+                            android:layout_width="45dp"
+                            android:layout_height="80dp"
+                            android:layout_marginLeft="30dp"
+                            android:layout_centerHorizontal="true"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:layout_weight="1">
+
+                        <RelativeLayout
+                            android:id="@+id/container_monde_2"
+                            android:layout_width="200dp"
+                            android:layout_height="80dp"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/rounded_white">
+
+                            <TextView
+                                android:id="@+id/txt_monde_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/grey_2"
+                                android:text="Monde 2"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="20dp"
+                                android:textSize="22dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/nbr_star_2"
+                                android:layout_below="@+id/txt_monde_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/grey_2"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="20dp"
+                                android:textSize="24dp"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/txt_monde_2"
+                                android:src="@drawable/star"
+                                android:layout_toRightOf="@+id/nbr_star_2"/>
+
+                            <ImageView
+                                android:id="@+id/img_monde_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/racing"
+                                android:layout_alignParentRight="true"
+                                android:layout_margin="10dp"/>
+
+                            <RelativeLayout
+                                android:id="@+id/container_lock_w2"
+                                android:visibility="invisible"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/rounded_transparent"/>
+
+                                <ImageView
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:src="@drawable/lock"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="15dp"/>
+
+                                <TextView
+                                    android:id="@+id/nbr_star_to_lock_2"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="17"
+                                    android:textColor="@color/white"
+                                    android:textSize="20dp"/>
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginBottom="2dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_toRightOf="@+id/nbr_star_to_lock_2"
+                                    android:src="@drawable/star"/>
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!-- LinearLayout Lane yellow horizontal -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:paddingLeft="45dp"
+                        android:gravity="left">
+
+                        <View
+                            android:id="@+id/lane_1_w3"
+                            android:layout_width="15dp"
+                            android:layout_height="30dp"
+                            android:background="@color/white" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!-- LinearLayout Lane yellow vertical -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/lane_2_w3"
+                        android:layout_marginLeft="45dp"
+                        android:layout_marginRight="45dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="15dp"
+                        android:background="@color/white"
+                        android:layout_weight="2">
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!-- LinearLayout Lane yellow horizontal -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2">
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingRight="45dp"
+                        android:layout_weight="1">
+
+                        <View
+                            android:id="@+id/lane_3_w3"
+                            android:layout_width="15dp"
+                            android:layout_height="30dp"
+                            android:background="@color/white"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- MONDE 3 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:layout_weight="1">
+
+                        <RelativeLayout
+                            android:id="@+id/container_monde_3"
+                            android:layout_width="200dp"
+                            android:layout_height="80dp"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/rounded_white">
+
+                            <TextView
+                                android:id="@+id/txt_monde_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/grey_2"
+                                android:text="Monde 3"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="20dp"
+                                android:textSize="22dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/nbr_star_3"
+                                android:layout_below="@+id/txt_monde_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="23"
+                                android:textColor="@color/grey_2"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="20dp"
+                                android:textSize="24dp"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/txt_monde_3"
+                                android:src="@drawable/star"
+                                android:layout_toRightOf="@+id/nbr_star_3"/>
+
+                            <ImageView
+                                android:id="@+id/img_monde_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/football"
+                                android:layout_alignParentRight="true"
+                                android:layout_margin="10dp"/>
+
+                            <RelativeLayout
+                                android:id="@+id/container_lock_w3"
+                                android:visibility="invisible"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/rounded_transparent"/>
+
+                                <ImageView
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:src="@drawable/lock"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="15dp"/>
+
+                                <TextView
+                                    android:id="@+id/nbr_star_to_lock_3"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="17"
+                                    android:textColor="@color/white"
+                                    android:textSize="20dp"/>
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginBottom="2dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_toRightOf="@+id/nbr_star_to_lock_3"
+                                    android:src="@drawable/star"/>
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/circle_w3"
+                            android:layout_width="45dp"
+                            android:layout_height="80dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_centerHorizontal="true"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- LinearLayout Lane yellow horizontal -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2">
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:paddingRight="45dp"
+                        android:layout_weight="1">
+
+                        <View
+                            android:id="@+id/lane_1_w4"
+                            android:layout_width="15dp"
+                            android:layout_height="30dp"
+                            android:background="@color/white"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!-- LinearLayout Lane yellow vertical -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/lane_2_w4"
+                        android:layout_marginLeft="45dp"
+                        android:layout_marginRight="45dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="15dp"
+                        android:background="@color/white"
+                        android:layout_weight="2">
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!-- LinearLayout Lane yellow horizontal -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:paddingLeft="45dp"
+                        android:gravity="left">
+
+                        <View
+                            android:id="@+id/lane_3_w4"
+                            android:layout_width="15dp"
+                            android:layout_height="30dp"
+                            android:background="@color/white" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:paddingTop="5dp"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/circle_w4"
+                            android:layout_width="45dp"
+                            android:layout_height="80dp"
+                            android:layout_marginLeft="30dp"
+                            android:layout_centerHorizontal="true"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:layout_weight="1">
+
+                        <RelativeLayout
+                            android:id="@+id/container_monde_4"
+                            android:layout_width="200dp"
+                            android:layout_height="80dp"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/rounded_white">
+
+                            <TextView
+                                android:id="@+id/txt_monde_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/grey_2"
+                                android:text="Monde 4"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="20dp"
+                                android:textSize="22dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/nbr_star_4"
+                                android:layout_below="@+id/txt_monde_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/grey_2"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginLeft="20dp"
+                                android:textSize="24dp"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/txt_monde_4"
+                                android:src="@drawable/star"
+                                android:layout_toRightOf="@+id/nbr_star_4"/>
+
+                            <ImageView
+                                android:id="@+id/img_monde_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/kayak"
+                                android:layout_alignParentRight="true"
+                                android:layout_margin="10dp"/>
+
+                            <RelativeLayout
+                                android:id="@+id/container_lock_w4"
+                                android:visibility="invisible"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/rounded_transparent"/>
+
+                                <ImageView
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:src="@drawable/lock"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="15dp"/>
+
+                                <TextView
+                                    android:id="@+id/nbr_star_to_lock_4"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="17"
+                                    android:textColor="@color/white"
+                                    android:textSize="20dp"/>
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginBottom="2dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_toRightOf="@+id/nbr_star_to_lock_4"
+                                    android:src="@drawable/star"/>
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        </ScrollView>
+
+
+        <!-- *******************************************
+        ************************************************
+        ***********************************************-->
+        <!-- Page SPEED -->
+        <RelativeLayout
+            android:id="@+id/tab_2_container"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="26dp"
+                android:textColor="@color/white"
+                android:padding="20dp"
+                android:text="Coming soon !"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

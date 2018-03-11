@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.softcaze.nicolas.colorchange.Activity.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linear_entete"
+            android:layout_width="match_parent"
+            android:background="@color/grey_2"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:background="@color/light_grey"
+                    android:layout_width="70dp"
+                    android:layout_height="25dp"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="-20dp"
+                    android:paddingLeft="20dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_alignBottom="@id/heart"
+                    android:textColor="@color/white"
+                    android:layout_toRightOf="@id/heart"
+
+                    android:text="9:32"/>
+                <ImageView
+                    android:id="@+id/heart"
+                    android:src="@drawable/heart"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+
+                <TextView
+                    android:id="@+id/nbrLife"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/heart"
+                    android:layout_alignRight="@id/heart"
+                    android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
+                    android:text="10"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:gravity="center"/>
+
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="200sp"
+                android:layout_height="200sp"
+                android:background="@drawable/logo_color_change"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/linearPlay"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:padding="15dp"
+            android:background="@color/red"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/img_play"
+                android:src="@drawable/play"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/btn_play"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/play"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearShop"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:padding="15dp"
+            android:layout_below="@id/linearPlay"
+            android:background="@color/light_grey"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <ImageView
+                android:src="@drawable/shop"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/btn_shop"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/shop"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearSetting"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:padding="15dp"
+            android:layout_below="@id/linearSetting"
+            android:background="@color/yellow"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <ImageView
+                android:src="@drawable/setting"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/btn_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/setting"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearRate"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:padding="15dp"
+            android:layout_below="@id/linearSetting"
+            android:background="@color/dark_grey"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <ImageView
+                android:src="@drawable/rate"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/btn_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/rate"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
