@@ -54,6 +54,7 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
     protected Void doInBackground(Integer... integers) {
         int indexRandom = 0;
 
+
         while(true) {
                 indexRandom = Min + (int) (Math.random() * ((Max - Min) + 1));
                 color = listColors.get(indexRandom);
@@ -75,6 +76,17 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
                         isCanceled = true;
                         break;
                     }
+
+                    /*if (pause) {
+                        synchronized (WATCH_DOG) {
+                            try {
+                                WATCH_DOG.wait();
+
+                            } catch (InterruptedException e) {e.printStackTrace();
+                            }
+                            pause = false;
+                        }
+                    }*/
                 }
 
                 /*try {
@@ -101,4 +113,19 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
     }
+
+    /**Wake up task from sleeping*/
+    /*public void wakeUp() {
+        synchronized(WATCH_DOG){
+            WATCH_DOG.notify();
+        }
+    }
+
+    public void pauseMyTask() {
+        pause = true;
+    }
+
+   public boolean getPause() {
+        return pause;
+    }*/
 }

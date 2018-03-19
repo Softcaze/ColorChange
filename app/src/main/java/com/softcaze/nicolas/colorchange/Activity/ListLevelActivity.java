@@ -3,6 +3,7 @@ package com.softcaze.nicolas.colorchange.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -47,8 +48,6 @@ public class ListLevelActivity extends Activity {
         myWorld = (World) getIntent().getSerializableExtra("worldClicked");
         listWorld = (List<World>) getIntent().getSerializableExtra("listWorld");
         user = (User) getIntent().getSerializableExtra("user");
-
-        nbrLife.setText("" + user.getNbrLife());
 
         loadDataBDD();
 
@@ -198,7 +197,6 @@ public class ListLevelActivity extends Activity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-
         Intent intent = new Intent(ListLevelActivity.this, PlayActivity.class);
 
         Bundle b = new Bundle();
@@ -211,6 +209,14 @@ public class ListLevelActivity extends Activity {
     }
 
     public void loadDataBDD(){
+        dao.open();
+
+        user.setNbrLife(dao.getNbrLife());
+        Log.i("ListLEvelActivity","NBr Life : " + user.getNbrLife());
+        dao.close();
+
+        nbrLife.setText("" + user.getNbrLife());
+
         for(int i = 0; i < myWorld.getlevels().size(); i++){
             dao.open();
 
@@ -232,4 +238,5 @@ public class ListLevelActivity extends Activity {
             }
         }
     }
+
 }

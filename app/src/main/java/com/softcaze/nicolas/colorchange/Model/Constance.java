@@ -37,6 +37,7 @@ public class Constance {
     public static final int EN_JEU = 2;
     public static final int END = 3;
     public static final int FIRST_USE = 4;
+    public static final int REWARDING = 5;
 
     // ID PAGE
     public static final int MENU = 1;
@@ -57,7 +58,8 @@ public class Constance {
     public static final int STEP_7 = 7;
     public static final int STEP_8 = 8;
 
-    public static final int NBR_LIFE_MAX = 100;
+    public static final int NBR_LIFE_MAX = 10;
+    public static final long TIME_BETWEEN_LIFE = 15; // Minutes
 
     public static int getDpSize(float v, Context c){
         float value = v; // margin in dips

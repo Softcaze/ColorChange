@@ -15,12 +15,15 @@ import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.softcaze.nicolas.colorchange.AsyncTask.ManagerDoor;
+import com.softcaze.nicolas.colorchange.Database.DAO;
 import com.softcaze.nicolas.colorchange.Model.Constance;
+import com.softcaze.nicolas.colorchange.Model.EtatGame;
 import com.softcaze.nicolas.colorchange.Model.Level;
 import com.softcaze.nicolas.colorchange.Model.User;
 import com.softcaze.nicolas.colorchange.Model.World;
 import com.softcaze.nicolas.colorchange.View.Game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +37,16 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
     protected List<World> listWorld = new ArrayList<World>();
     protected RewardedVideoAd mRewardedVideoAd;
     protected boolean isVideoLoaded = false;
-    protected boolean isRewarded = false;
     protected User user;
+    protected EtatGame etat = new EtatGame(Constance.TUTORIEL);
+
+    protected DAO dao = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
+        dao = new DAO(this);
 
         // ADs Video
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
@@ -54,7 +59,7 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
         listWorld = (List<World>) getIntent().getSerializableExtra("listWorld");
         user = (User) getIntent().getSerializableExtra("user");
 
-        Game game = new Game(this, getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight(), levelActu, worldActu, listWorld, mRewardedVideoAd, isVideoLoaded, user);
+        Game game = new Game(this, getWindowManager().getDefaultDisplay().getWidth(), getWindowManager().getDefaultDisplay().getHeight(), levelActu, worldActu, listWorld, mRewardedVideoAd, user, etat);
 
         addContentView(game, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         //setContentView(game);
@@ -75,6 +80,18 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
         if(Game.taskSpeedVehic != null){
             Game.taskSpeedVehic.cancel(true);
         }
+
+        Intent intent = new Intent(TransitionActivityView.this, ListLevelActivity.class);
+
+        Bundle b = new Bundle();
+
+        b.putSerializable("user", user);
+        b.putSerializable("worldClicked", worldActu);
+        b.putSerializable("listWorld", (Serializable) listWorld);
+
+        intent.putExtras(b);
+
+        startActivity(intent);
     }
 
     @Override
@@ -101,6 +118,7 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
     @Override
     public void onRewardedVideoAdLoaded() {
         isVideoLoaded = true;
+        Log.i("VIDEO LOADED","La vidéo est chargé");
     }
 
     @Override
@@ -116,14 +134,29 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
     @Override
     public void onRewardedVideoAdClosed() {
         isVideoLoaded = false;
+
         loadRewardedVideoAd();
 
-        isRewarded = false;
+        if(etat.hasRevive()) {
+            etat.setEtat(Constance.REWARDING);
+        }
+        etat.setHasRevive(false);
     }
 
     @Override
     public void onRewarded(RewardItem rewardItem) {
-        isRewarded = true;
+        etat.setEtat(Constance.REWARDING);
+        etat.setHasRevive(false);
+
+        dao.open();
+
+        if(dao.getNbrLife() < 10){
+            user.setNbrLife(user.getNbrLife() - 1);
+            dao.setNbrLife(dao.getNbrLife() + 1);
+        }
+
+        dao.close();
+
     }
 
     @Override
@@ -133,11 +166,11 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) {
-
+        Log.i("VIDEO LOADED","La vidéo n'a pas pu charger");
+        etat.setHasRevive(true);
     }
 
     private void loadRewardedVideoAd(){
-        Log.i("LOADRWARDED METHODE", "BONJOUR");
         mRewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
                 new AdRequest.Builder().build());
     }

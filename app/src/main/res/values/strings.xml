@@ -43,4 +43,6 @@
     <string name="end_tuto_2">Are you ready ?</string>
     <string name="end_tuto_3">(Click to start level 1)</string>
     <string name="shop">SHOP</string>
+    <string name="libelle__tutoriel_continue">Tap to continue</string>
+    <string name="libelle_full_life">Full</string>
 </resources>

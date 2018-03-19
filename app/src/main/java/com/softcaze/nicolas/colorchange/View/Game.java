@@ -25,6 +25,7 @@ import com.softcaze.nicolas.colorchange.AsyncTask.ManagerDoor;
 import com.softcaze.nicolas.colorchange.Database.DAO;
 import com.softcaze.nicolas.colorchange.Model.ColorButton;
 import com.softcaze.nicolas.colorchange.Model.Constance;
+import com.softcaze.nicolas.colorchange.Model.EtatGame;
 import com.softcaze.nicolas.colorchange.Model.Global;
 import com.softcaze.nicolas.colorchange.Model.ImageAnim;
 import com.softcaze.nicolas.colorchange.Model.LaneColor;
@@ -66,7 +67,7 @@ public class Game extends View {
     protected int intDisparition = R.drawable.disparition;
     protected int intPause = R.drawable.pause;
     protected int score = 0;
-    protected int etatGame= Constance.TUTORIEL;
+    protected EtatGame etatGame;
     protected int bestScore = 0;
 
     protected int btnXRevive = 0;
@@ -92,10 +93,9 @@ public class Game extends View {
     public static ManageSpeedVehic taskSpeedVehic;
 
     protected int nbrColumn = 0;
+    protected boolean hasRevive = false;
 
     protected User user;
-
-    protected boolean isVideoLoaded = false;
 
     // ABOUT TUTORIEL FIRST USE
     protected int firstUse = Constance.TRUE;
@@ -106,7 +106,7 @@ public class Game extends View {
     protected Vehicule vehicTuto;
     protected Global varGlobal;
 
-    public Game(Context context, int largeur, int hauteur, Level myLevel, World w, List<World> worlds, RewardedVideoAd ad, boolean isVideoL, User u) {
+    public Game(Context context, int largeur, int hauteur, Level myLevel, World w, List<World> worlds, RewardedVideoAd ad, User u, EtatGame etat) {
         super(context);
 
         LARGEUR_ECRAN = largeur;
@@ -116,21 +116,23 @@ public class Game extends View {
 
         dao.open();
 
+        etatGame = etat;
+
         firstUse = dao.getFirstUtilisation();
 
         if(firstUse == Constance.TRUE){
-            etatGame = Constance.FIRST_USE;
+            etatGame.setEtat(Constance.FIRST_USE);
             dao.setFirstUtilisation(Constance.TRUE);
 
             if(myLevel.getNum() != 1){
-                etatGame = Constance.TUTORIEL;
+                etatGame.setEtat(Constance.TUTORIEL);
                 dao.setFirstUtilisation(Constance.FALSE);
             }
         }
 
         dao.close();
 
-        this.user = new User(u);
+        this.user = u;
 
         levelActu = new Level(myLevel);
         worldActu = w;
@@ -143,8 +145,6 @@ public class Game extends View {
         initColorButton();
 
         mRewardedVideoAd = ad;
-
-        isVideoLoaded = isVideoL;
 
         laneColor = new LaneColor(doorColorMap.get(levelActu.getCouleurs().get(0)), 0, HAUTEUR_ECRAN - HAUTEUR_ECRAN/4 - HAUTEUR_ECRAN/10, levelActu.getCouleurs().get(0));
 
@@ -171,10 +171,15 @@ public class Game extends View {
         paintBorderRect.setStrokeWidth(Constance.getDpSize(2, getContext()));
         paintBorderRect.setColor(Color.rgb(169,169,169));
 
+        if(etatGame.getEtat() == Constance.REWARDING){
+            Log.i("REWARDING", " CA PASSE");
+            etatGame.setEtat(Constance.TUTORIEL);
+        }
+
         /**
          * Affichage du Tutoriel
          */
-        if(etatGame == Constance.TUTORIEL){
+        if(etatGame.getEtat() == Constance.TUTORIEL){
             // Affichage Fond
             canvas.drawRect(0, HAUTEUR_ECRAN/2, LARGEUR_ECRAN, HAUTEUR_ECRAN/4, paintBlackRect);
             // Affichage Border
@@ -188,7 +193,14 @@ public class Game extends View {
             paintTxtLvlTutoriel.setTextSize(Constance.getDpSize(40, getContext()));
             canvas.drawText(txtLvlTutoriel, LARGEUR_ECRAN/2, HAUTEUR_ECRAN/2 - HAUTEUR_ECRAN/6, paintTxtLvlTutoriel);
 
-            String libelleTutoriel = getResources().getString(R.string.libelle_tutoriel_choose);
+            String libelleTutoriel = "";
+
+            if(score != 0){
+                libelleTutoriel = getResources().getString(R.string.libelle__tutoriel_continue);
+            }
+            else{
+                libelleTutoriel = getResources().getString(R.string.libelle_tutoriel_choose);
+            }
             paintTxtLvlTutoriel.setTextSize(Constance.getDpSize(26, getContext()));
             paintTxtLvlTutoriel.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
             canvas.drawText(libelleTutoriel, LARGEUR_ECRAN/2, HAUTEUR_ECRAN/2 - HAUTEUR_ECRAN/6 + HAUTEUR_ECRAN/10, paintTxtLvlTutoriel);
@@ -212,7 +224,7 @@ public class Game extends View {
         canvas.drawText(worldActu.getName(), LARGEUR_ECRAN / 15 * 2, HAUTEUR_ECRAN / 30 + paintNameWorld.getTextSize() / 2, paintNameWorld);
 
         // Affichage Score
-        if(etatGame != Constance.FIRST_USE) {
+        if(etatGame.getEtat() != Constance.FIRST_USE) {
             Paint paintScore = new Paint();
             paintScore.setTextSize(Constance.getDpSize(25, getContext()));
             paintScore.setColor(Color.WHITE);
@@ -245,15 +257,7 @@ public class Game extends View {
         for (int i = listVehicules.size() - 1; i >= 0; i--) {
             if (listVehicules.get(i).getImg() != null) {
                 canvas.drawBitmap(listVehicules.get(i).getImg(), listVehicules.get(i).getX(), listVehicules.get(i).getY(), null);
-                if(etatGame != Constance.END){
-                    /*if(score > levelActu.getScoreStar2()){
-                        vitesseVehic = (float) (vitesseVehic * levelActu.getCoefSpeed());
-                    }
-                    else if(score > levelActu.getScoreStar1()){
-                        vitesseVehic = (float) (vitesseVehic * levelActu.getCoefSpeed());
-                    }*/
-
-                    Log.i("ON DRAW", " varGlobal.getVitesse() : " + varGlobal.getVitesse());
+                if(etatGame.getEtat() != Constance.END){
                     listVehicules.get(i).setY(listVehicules.get(i).getY() + HAUTEUR_ECRAN / varGlobal.getVitesse());
                 }
             }
@@ -270,6 +274,7 @@ public class Game extends View {
 
                             dao.open();
 
+                            dao.saveTimeLastLife();
                             dao.setNbrLife(dao.getNbrLife() - 1);
 
                             dao.close();
@@ -313,7 +318,7 @@ public class Game extends View {
 
                     dao.close();
 
-                    etatGame = Constance.END;
+                    etatGame.setEtat(Constance.END);
                 }
 
                 Bitmap imgAnimDisparaitre = Constance.getResizedBitmap(BitmapFactory.decodeResource(getResources(), intDisparition), listVehicules.get(i).getImg().getWidth() * 1.2, 0);
@@ -335,7 +340,7 @@ public class Game extends View {
         /**
          * TUTORIEL FIRST USE
          */
-        if(etatGame == Constance.FIRST_USE){
+        if(etatGame.getEtat() == Constance.FIRST_USE){
             switch (etatFirstUse){
                 case Constance.STEP_1:
                     // Affichage Fond
@@ -561,7 +566,7 @@ public class Game extends View {
         /**
          * Affichage du menu END
          */
-        if(etatGame == Constance.END){
+        if(etatGame.getEtat() == Constance.END){
             paintBlackRect.setAlpha(235);
             canvas.drawRect(0, 0, LARGEUR_ECRAN, HAUTEUR_ECRAN, paintBlackRect);
 
@@ -618,20 +623,44 @@ public class Game extends View {
             btnYRevive = HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + HAUTEUR_ECRAN/15;
             btnWidth = LARGEUR_ECRAN - LARGEUR_ECRAN/6 - btnXAgain;
             btnHeight = HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + HAUTEUR_ECRAN/15 + HAUTEUR_ECRAN/10 - btnYRevive;
-            createButtonEnd(btnXRevive, btnYRevive, LARGEUR_ECRAN - LARGEUR_ECRAN/6, HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + HAUTEUR_ECRAN/15 + HAUTEUR_ECRAN/10, R.color.red, canvas, R.drawable.application_ad, getResources().getString(R.string.libelle_revive));
+
+            createButtonEnd(btnXRevive, btnYRevive, LARGEUR_ECRAN - LARGEUR_ECRAN/6, HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + HAUTEUR_ECRAN/15 + HAUTEUR_ECRAN/10, R.color.red, canvas, R.drawable.application_ad, "Revive");
+
+            if(!mRewardedVideoAd.isLoaded() || !etatGame.hasRevive()){
+                Paint paintFondTransparent = new Paint();
+                paintFondTransparent.setStyle(Paint.Style.FILL);
+                paintFondTransparent.setColor(Color.BLACK);
+                paintFondTransparent.setAlpha(150);
+                canvas.drawRect(btnXRevive, btnYRevive, LARGEUR_ECRAN - LARGEUR_ECRAN/6, HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + HAUTEUR_ECRAN/15 + HAUTEUR_ECRAN/10, paintFondTransparent);
+
+                paintFondTransparent.setStyle(Paint.Style.STROKE);
+                paintFondTransparent.setColor(getResources().getColor(R.color.black));
+                paintFondTransparent.setStrokeWidth(Constance.getDpSize(2, getContext()));
+                canvas.drawRoundRect(btnXRevive, btnYRevive, LARGEUR_ECRAN - LARGEUR_ECRAN/6, HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + HAUTEUR_ECRAN/15 + HAUTEUR_ECRAN/10, Constance.getDpSize(10, getContext()), Constance.getDpSize(10, getContext()), paintFondTransparent);
+            }
+            if(etatGame.hasRevive()){
+                //listVehicules.clear();
+                listVehicules = new ArrayList<Vehicule>();
+            }
+
+
 
             /**
              * AFFICHAGE BUTTON AGAIN
              */
+
             btnXAgain = LARGEUR_ECRAN/6;
             btnYAgain = HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + (HAUTEUR_ECRAN/15)*3;
+
             createButtonEnd(btnXAgain, btnYAgain, LARGEUR_ECRAN - LARGEUR_ECRAN/6, HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + (HAUTEUR_ECRAN/15)*3 + HAUTEUR_ECRAN/10, R.color.yellow, canvas, R.drawable.replay, getResources().getString(R.string.libelle_again));
 
             /**
              * Affichage Button 'Menu'
               */
+
             btnXMenu = LARGEUR_ECRAN/6;
             btnYMenu = HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + (HAUTEUR_ECRAN/15)*5;
+
             btnMenuWidth = (LARGEUR_ECRAN - LARGEUR_ECRAN/6) - 2*((LARGEUR_ECRAN - (LARGEUR_ECRAN/6)*2)/3) - ((LARGEUR_ECRAN - (LARGEUR_ECRAN/6)*2)/12) - btnXMenu;
             createButtonEnd(btnXMenu,btnYMenu, (LARGEUR_ECRAN - LARGEUR_ECRAN/6) - 2*((LARGEUR_ECRAN - (LARGEUR_ECRAN/6)*2)/3) - ((LARGEUR_ECRAN - (LARGEUR_ECRAN/6)*2)/12), HAUTEUR_ECRAN/5 + HAUTEUR_ECRAN/8 + star_white.getHeight() + (HAUTEUR_ECRAN/15)*5 + HAUTEUR_ECRAN/10,  R.color.dark_grey, canvas, R.drawable.ico_menu, "");
 
@@ -667,7 +696,7 @@ public class Game extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(etatGame == Constance.FIRST_USE){
+        if(etatGame.getEtat() == Constance.FIRST_USE){
             if(event.getAction() == MotionEvent.ACTION_DOWN){
                 switch(etatFirstUse){
                     case Constance.STEP_1:
@@ -681,7 +710,7 @@ public class Game extends View {
                         if(listColorBtn.get(1) != null){
                             // WHEN USER CLICK ON "NO"
                             if(listColorBtn.get(1).isClicked(event.getX(), event.getY())){
-                                etatGame = Constance.TUTORIEL;
+                                etatGame.setEtat(Constance.TUTORIEL);
                             }
                         }
                     break;
@@ -723,13 +752,13 @@ public class Game extends View {
                     case Constance.STEP_7:
                         break;
                     case Constance.STEP_8:
-                        etatGame = Constance.TUTORIEL;
+                        etatGame.setEtat(Constance.TUTORIEL);
                         break;
                 }
             }
         }
 
-        else if(etatGame == Constance.TUTORIEL) {
+        else if(etatGame.getEtat() == Constance.TUTORIEL) {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 firstUse = Constance.FALSE;
 
@@ -750,16 +779,16 @@ public class Game extends View {
                 }
 
                 try{
-                    taskSpeedVehic.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    taskSpeedVehic.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 10);
                 }
                 catch (Exception e){
                     Log.i("TASK MANAGE SPEED VEHIC", "Impossible de l'executer, e : " + e);
                 }
 
-                etatGame = Constance.EN_JEU;
+                etatGame.setEtat(Constance.EN_JEU);
             }
         }
-        else if(etatGame == Constance.EN_JEU){
+        else if(etatGame.getEtat() == Constance.EN_JEU){
             if(event.getAction() == MotionEvent.ACTION_DOWN){
                 //task.cancel(true);
                 for(int i = 0; i < listColorBtn.size(); i++){
@@ -771,28 +800,32 @@ public class Game extends View {
                 }
             }
         }
-        else if(etatGame == Constance.END){
+        else if(etatGame.getEtat() == Constance.END){
             // Si l'utilisateur clique sur 'Revive'
             if(event.getX() >= btnXRevive && event.getX() <= btnXRevive + btnWidth && event.getY() >= btnYRevive && event.getY() <= btnYRevive + btnHeight){
-                // Lancer la pub vidéo
-                if (mRewardedVideoAd.isLoaded()) {
-                    try{
-                        mRewardedVideoAd.show();
+                if(etatGame.hasRevive()){
+                    // Lancer la pub vidéo
+                    if (mRewardedVideoAd.isLoaded()) {
+                        try{
+                            mRewardedVideoAd.show();
+                        }
+                        catch (Exception e){
+                            Log.i("Load RewardedVideoAd", "Exception : " + e);
+                        }
                     }
-                    catch (Exception e){
-                        Log.i("Load RewardedVideoAd", "Exception : " + e);
+                    else{
                     }
-                }
-                else{
                 }
             }
 
             // Si l'utilisateur clique sur 'Again'
             if(event.getX() >= btnXAgain && event.getX() <= btnXAgain + btnWidth && event.getY() >= btnYAgain && event.getY() <= btnYAgain + btnHeight){
                 if(user.getNbrLife() > 0) {
-                    etatGame = Constance.TUTORIEL;
+                    etatGame.setHasRevive(true);
+                    etatGame.setEtat(Constance.TUTORIEL);
                     listVehicules = new ArrayList<Vehicule>();
                     score = 0;
+                    varGlobal.setVitesse(levelActu.getSpeedStart());
                 }
                 else{
                     Toast.makeText(getContext(), "Plus de vie", Toast.LENGTH_LONG).show();
@@ -802,6 +835,13 @@ public class Game extends View {
             // Si l'utilisateur clique sur 'Menu'
             if(event.getX() >= btnXMenu && event.getX() <= btnXMenu + btnMenuWidth && event.getY() >= btnYMenu && event.getY() <= btnYMenu + btnHeight){
                 Bundle b = new Bundle();
+
+                // On re check en base le nbr de vie, il est possible que l'user en est gagné une en regardant une video de récompense
+                dao.open();
+
+                user.setNbrLife(dao.getNbrLife());
+
+                dao.close();
 
                 b.putSerializable("worldClicked", worldActu);
                 b.putSerializable("listWorld", (Serializable) listWorld);

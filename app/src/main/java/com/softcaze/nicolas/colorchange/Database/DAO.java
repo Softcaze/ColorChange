@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 public class DAO {
-    public static int VERSION = 26;
+    public static int VERSION = 35;
     public static String NOM_DB = "colorchangedatabase.db";
 
     public static final String NOM_TABLE_USER = "user";
@@ -28,6 +28,8 @@ public class DAO {
     public static final int NUM_COL_NBR_LIFE = 1;
     public static final String COL_FIRST_UTILISATION = "first_utilisation";
     public static final int NUM_COL_FIRST_UTILISATION = 2;
+    public static final String COL_TIME_LAST_LIFE = "time_last_life";
+    public static final int NUM_COL_TIME_LAST_LIFE = 3;
 
     public static final String NOM_TABLE_LEVEL = "level";
     public static final String COL_ID_LEVEL = "id_level";
@@ -84,6 +86,55 @@ public class DAO {
         }
 
         return -1;
+    }
+
+    public String getTimeLastLife(){
+        String timeLastLife = "";
+
+        Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_USER, null);
+
+        if(c.getCount() != 0){
+            try{
+                c.moveToFirst();
+
+                timeLastLife = c.getString(NUM_COL_TIME_LAST_LIFE);
+            }
+            catch (Exception e){
+                Log.i("GetTimeLastLife", "Exception : " + e);
+            }
+        }
+
+        if(timeLastLife == null){
+            timeLastLife = "";
+        }
+
+        return timeLastLife;
+    }
+
+    public void saveTimeLastLife(){
+        Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_USER, null);
+
+        Long currentTimeMillis = System.currentTimeMillis();
+        String currentTimeMillisStr = currentTimeMillis.toString();
+        ContentValues value = new ContentValues();
+        value.put( COL_TIME_LAST_LIFE, currentTimeMillisStr);
+
+        if(c.getCount() == 0){
+            try{
+                database.insert(NOM_TABLE_USER, null, value);
+            }
+            catch (Exception e){
+                Log.i("SAVE TIME LIFE", "Exception : " + e);
+            }
+        }
+        else{
+            try{
+                database.update(NOM_TABLE_USER, value, null, null);
+            }
+            catch (Exception e){
+                Log.i("UPDATE TIME LIFE", "Expcetion : " + e);
+            }
+        }
     }
 
     public void setNbrLife(int nbrLife){

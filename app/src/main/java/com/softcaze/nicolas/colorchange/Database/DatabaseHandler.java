@@ -16,6 +16,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public static final int NUM_COL_NBR_LIFE = 1;
     public static final String COL_FIRST_UTILISATION = "first_utilisation";
     public static final int NUM_COL_FIRST_UTILISATION = 2;
+    public static final String COL_TIME_LAST_LIFE = "time_last_life";
+    public static final int NUM_COL_TIME_LAST_LIFE = 3;
 
     public static final String NOM_TABLE_LEVEL = "level";
     public static final String COL_ID_LEVEL = "id_level";
@@ -35,7 +37,8 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     public static final String CREATE_TABLE_USER = "CREATE TABLE IF NOT EXISTS " + NOM_TABLE_USER + " (" +
             COL_ID_USER + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COL_NBR_LIFE + " INTEGER, " + COL_FIRST_UTILISATION + " INTEGER);";
+            COL_NBR_LIFE + " INTEGER, " + COL_FIRST_UTILISATION + " INTEGER, " +
+            COL_TIME_LAST_LIFE + " TEXT);";
 
     public static final String CREATE_TABLE_LEVEL = "CREATE TABLE IF NOT EXISTS " + NOM_TABLE_LEVEL + " (" +
             COL_ID_LEVEL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

@@ -47,8 +47,8 @@ public class PlayActivity extends Activity {
 
         w1 = new World(1, "World 1", R.drawable.americanfootball, 0, HAUTEUR_ECRAN);
         w2 = new World(2, "World 2", R.drawable.racing, 10, HAUTEUR_ECRAN);
-        w3 = new World(3, "World 3", R.drawable.aireplane, 100, HAUTEUR_ECRAN);
-        w4 = new World(4, "World 4", R.drawable.kayak, 150, HAUTEUR_ECRAN);
+        w3 = new World(3, "World 3", R.drawable.aireplane, 20, HAUTEUR_ECRAN);
+        w4 = new World(4, "World 4", R.drawable.kayak, 30, HAUTEUR_ECRAN);
 
         listWorld.add(w1);
         listWorld.add(w2);
@@ -262,6 +262,8 @@ public class PlayActivity extends Activity {
      */
     public void loadDataBDD(){
         dao.open();
+
+        user.setNbrLife(dao.getNbrLife());
 
         int nbrStar = 0;
 

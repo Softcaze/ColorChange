@@ -17,10 +17,10 @@ public class Level implements Serializable {
     List<Integer> couleurs;
     int score;
     int speedStart;
-    double coefSpeed;
+    int coefSpeed;
     int nbrStars;
 
-    public Level(int n, int spSt, int sSt1, int sSt2, int sSt3, List<Integer> c, double cS, int nbrStars, int d){
+    public Level(int n, int spSt, int sSt1, int sSt2, int sSt3, List<Integer> c, int cS, int nbrStars, int d){
         this.num = n;
         this.score = 0;
         this.coefSpeed = cS;
@@ -75,7 +75,7 @@ public class Level implements Serializable {
         return scoreStar3;
     }
 
-    public double getCoefSpeed() {
+    public int getCoefSpeed() {
         return coefSpeed;
     }
 
@@ -115,7 +115,7 @@ public class Level implements Serializable {
         this.scoreStar3 = scoreStar3;
     }
 
-    public void setCoefSpeed(double coefSpeed) {
+    public void setCoefSpeed(int coefSpeed) {
         this.coefSpeed = coefSpeed;
     }
 

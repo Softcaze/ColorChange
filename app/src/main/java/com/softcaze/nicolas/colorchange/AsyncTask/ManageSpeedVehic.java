@@ -14,26 +14,24 @@ import java.util.List;
  * Created by Nicolas on 11/03/2018.
  */
 
-public class ManageSpeedVehic extends AsyncTask<Void, Void, Void> {
+public class ManageSpeedVehic extends AsyncTask<Integer, Void, Void> {
     protected Global varGlobal;
     protected Level levelActu;
 
     public ManageSpeedVehic(Level l, Global g){
-        varGlobal = new Global(g);
-        levelActu = new Level(l);
+        this.varGlobal =  g;
+        levelActu = l;
     }
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Void doInBackground(Integer... voids) {
         while(true) {
-            Log.i("MANAGE SPEED VEHIC", "MSJ");
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            Log.i("MANAGE SPEED VEHIC"," VItesse : " + varGlobal.getVitesse());
-            varGlobal.setVitesse((int) (varGlobal.getVitesse() * levelActu.getCoefSpeed()));
+            this.varGlobal.setVitesse(this.varGlobal.getVitesse() - levelActu.getCoefSpeed());
 
             if(isCancelled()){
                 break;
