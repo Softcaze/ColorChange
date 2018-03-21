@@ -59,7 +59,7 @@ public class Constance {
     public static final int STEP_8 = 8;
 
     public static final int NBR_LIFE_MAX = 10;
-    public static final long TIME_BETWEEN_LIFE = 15; // Minutes
+    public static final long TIME_BETWEEN_LIFE = 1; // Minutes
 
     public static int getDpSize(float v, Context c){
         float value = v; // margin in dips
@@ -103,5 +103,14 @@ public class Constance {
 //        canvas.drawBitmap(original, 5.0f, 0.0f, null);
 
         return rotatedBitmap;
+    }
+
+    public static String addZero(String nbr){
+        if(Integer.valueOf(nbr) < 10){
+            return "0" + nbr;
+        }
+        else{
+            return nbr;
+        }
     }
 }

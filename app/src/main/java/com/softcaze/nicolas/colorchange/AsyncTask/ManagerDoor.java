@@ -58,12 +58,12 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
         while(true) {
                 indexRandom = Min + (int) (Math.random() * ((Max - Min) + 1));
                 color = listColors.get(indexRandom);
-                Vehicule myVehic = new Vehicule(Constance.getResizedBitmap(vehicColorMap.get(color), LARGEUR_ECRAN / nbrColumn, 0), HAUTEUR_ECRAN / 15, LARGEUR_ECRAN, color);
+                Vehicule myVehic = new Vehicule(Constance.getResizedBitmap(vehicColorMap.get(color), LARGEUR_ECRAN / nbrColumn, 0), HAUTEUR_ECRAN / 20, LARGEUR_ECRAN, color);
                 myVehic.setX(myVehic.getRandomX(LARGEUR_ECRAN / nbrColumn));
 
                 vehicules.add(myVehic);
 
-                while(myVehic.getY() < distance && !isCanceled){
+                while(myVehic.getY() < distance){
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
@@ -97,6 +97,7 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
                 }*/
 
             if (isCancelled()) {
+                Log.i("MANAGER DOOR"," STOP");
                 break;
             }
         }

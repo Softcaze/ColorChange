@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 public class DAO {
-    public static int VERSION = 35;
+    public static int VERSION = 50;
     public static String NOM_DB = "colorchangedatabase.db";
 
     public static final String NOM_TABLE_USER = "user";
@@ -111,11 +111,10 @@ public class DAO {
         return timeLastLife;
     }
 
-    public void saveTimeLastLife(){
+    public void saveTimeLastLife(String time){
         Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_USER, null);
 
-        Long currentTimeMillis = System.currentTimeMillis();
-        String currentTimeMillisStr = currentTimeMillis.toString();
+        String currentTimeMillisStr = time;
         ContentValues value = new ContentValues();
         value.put( COL_TIME_LAST_LIFE, currentTimeMillisStr);
 

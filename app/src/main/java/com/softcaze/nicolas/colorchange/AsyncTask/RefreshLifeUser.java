@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.softcaze.nicolas.colorchange.Activity.MainActivity;
+import com.softcaze.nicolas.colorchange.Interface.SyncTimeLife;
 import com.softcaze.nicolas.colorchange.Model.Constance;
 import com.softcaze.nicolas.colorchange.Model.User;
 
@@ -15,24 +16,27 @@ import java.util.Date;
  * Created by Nicolas on 19/03/2018.
  */
 
-public class RefreshLifeUser extends AsyncTask<Void, Long, Void> {
+public class RefreshLifeUser extends AsyncTask<Void, User, Void>{
     protected User user;
     protected Long spendTime;
     protected Calendar dateActu;
     protected Calendar dateLastLife;
+    protected SyncTimeLife syncTimeLife;
 
-    public RefreshLifeUser(User u, Calendar dLastlife)
+    public RefreshLifeUser(User u, Calendar dLastlife, SyncTimeLife s)
     {
         this.user = u;
         dateActu = Calendar.getInstance();
         dateLastLife = Calendar.getInstance();
         dateLastLife = dLastlife;
+        this.syncTimeLife = s;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         while(true){
             if (isCancelled()) {
+                Log.i("REFRESH LIFE USER"," STOP");
                 break;
             }
 
@@ -52,11 +56,7 @@ public class RefreshLifeUser extends AsyncTask<Void, Long, Void> {
 
                 user.setTimeLastLife(diff);
 
-                if(Constance.TIME_BETWEEN_LIFE - minutes >= 0){
-                    //Log.i("REFRESH LIFE", "Minutes : " + (Constance.TIME_BETWEEN_LIFE  - minutes) + " Secondes : " + seconds%60);
-                }
-
-                publishProgress(diff);
+                publishProgress(user);
 
                 // Checked if life is recovered
                /* if((Constance.TIME_BETWEEN_LIFE - spendTime) <= 0){
@@ -78,10 +78,9 @@ public class RefreshLifeUser extends AsyncTask<Void, Long, Void> {
     }
 
     @Override
-    protected void onProgressUpdate(Long... values) {
+    protected void onProgressUpdate(User... values) {
         super.onProgressUpdate(values);
 
-        Log.i("ON PROGRESS", "TIME USER : " + values[0]);
-        user.setTimeLastLife(values[0]);
+        this.syncTimeLife.onTaskCompleted(user);
     }
 }

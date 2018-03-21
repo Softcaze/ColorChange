@@ -274,7 +274,10 @@ public class Game extends View {
 
                             dao.open();
 
-                            dao.saveTimeLastLife();
+                            if(dao.getTimeLastLife().equals("")){
+                                dao.saveTimeLastLife(String.valueOf(System.currentTimeMillis()));
+                            }
+
                             dao.setNbrLife(dao.getNbrLife() - 1);
 
                             dao.close();
@@ -687,7 +690,7 @@ public class Game extends View {
                 task.cancel(true);
 
                 if(task.isCancelled()){
-                    task = null;
+                    task = new ManagerDoor(getContext(), levelActu.getCouleurs(), listVehicules, LARGEUR_ECRAN, HAUTEUR_ECRAN, vehiculeColorMap, nbrColumn, levelActu.getDistance());
                 }
             }
         }
@@ -760,6 +763,7 @@ public class Game extends View {
 
         else if(etatGame.getEtat() == Constance.TUTORIEL) {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
+
                 firstUse = Constance.FALSE;
 
                 dao.open();
@@ -772,6 +776,7 @@ public class Game extends View {
                 taskSpeedVehic = new ManageSpeedVehic(levelActu, varGlobal);
 
                 try{
+                    Log.i("TASK MANAGER DOOR", "TASK ETAT : " + listVehicules.size());
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 10);
                 }
                 catch(Exception e){
