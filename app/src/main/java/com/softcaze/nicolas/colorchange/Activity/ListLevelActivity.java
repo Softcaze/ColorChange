@@ -61,15 +61,15 @@ public class ListLevelActivity extends Activity {
 
         initView();
 
-        /**
-         * Initialise Time Life
-         */
-        timeLife.setText(initializeTimeLife());
-
         // LOAD WORLD
         myWorld = (World) getIntent().getSerializableExtra("worldClicked");
         listWorld = (List<World>) getIntent().getSerializableExtra("listWorld");
         user = (User) getIntent().getSerializableExtra("user");
+
+        /**
+         * Initialise Time Life
+         */
+        timeLife.setText(initializeTimeLife());
 
         loadDataBDD();
 
@@ -80,6 +80,8 @@ public class ListLevelActivity extends Activity {
         txt_monde_1.setText(myWorld.getName());
         nbr_star.setText(String.valueOf(myWorld.getNumberStars()));
         img_monde.setImageResource(myWorld.getImg());
+
+        Log.i("BEFORE NEW", "" + dateLastLife.get(Calendar.HOUR_OF_DAY) + ":" + dateLastLife.get(Calendar.MINUTE) + ":" + dateLastLife.get(Calendar.SECOND));
 
         taskRefresh = new RefreshLifeUser(user, dateLastLife, new SyncTimeLife() {
             @Override
@@ -369,33 +371,92 @@ public class ListLevelActivity extends Activity {
 
         dao.open();
 
-        if(!dao.getTimeLastLife().equals("")){
+        if(!dao.getTimeLastLife().equals("")) {
             dateLastLife.setTimeInMillis(Long.valueOf(dao.getTimeLastLife()));
 
             long diff = dateActu.getTimeInMillis() - Long.valueOf(dao.getTimeLastLife());
-            long seconds = diff/1000;
-            long minutes = seconds/60;
+            long seconds = diff / 1000;
+            long minutes = seconds / 60;
 
-            long minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - diff/1000/60);
-            int secondStart = 60;
+            long minutesRestantes;
+            long secondesRestantes;
+            long secondStart;
 
-            if(seconds%60 == 0){
-                secondStart = 0;
+            Log.i("Minutes", "Min : " + minutes);
+
+            if(minutes >= Constance.TIME_BETWEEN_LIFE){
+                int nbrLifeAdded = (int) (minutes/Constance.TIME_BETWEEN_LIFE);
+
+
+                if(dao.getNbrLife() + nbrLifeAdded <= Constance.NBR_LIFE_MAX){
+                    try{
+                        user.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
+                        dao.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
+                        nbrLife.setText("" + dao.getNbrLife() + nbrLifeAdded);
+                    }
+                    catch(Exception e){
+                        Log.i("ADDING LIFE USER", "Exception e : " + e);
+                    }
+                }
+                else{
+                    try{
+                        // Si les vies ajoutées dépassent le MAX_LIFE de l'utilisateur
+                        user.setNbrLife(Constance.NBR_LIFE_MAX);
+                        dao.setNbrLife(Constance.NBR_LIFE_MAX);
+                        nbrLife.setText("" + Constance.NBR_LIFE_MAX);
+                    }
+                    catch(Exception e){
+                        Log.i("ADDING LIFE MAX USER", "Exception e : " + e);
+                    }
+                }
+
+                minutesRestantes = minutes - (nbrLifeAdded * Constance.TIME_BETWEEN_LIFE);
+
+                Log.i("LIST LEVEL"," MINUTES : " + minutes);
+
+                dateLastLife = dateActu;
+                dateLastLife.set(Calendar.MINUTE, (int) (Constance.TIME_BETWEEN_LIFE - minutesRestantes));
+                dateLastLife.set(Calendar.SECOND, (int) minutesRestantes*60);
+
+                user.setTimeLastLife(dateLastLife.getTimeInMillis());
+                dao.saveTimeLastLife(String.valueOf(user.getTimeLastLife()));
+
+                secondStart = 60;
+
+                if (seconds % 60 == 0) {
+                    secondStart = 0;
+                }
+
+                secondesRestantes = (secondStart - (diff / 1000) % 60);
+
+                if (secondesRestantes % 60 == 0) {
+                    minutesRestantes += 1;
+                }
             }
+            else{
+                minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - diff / 1000 / 60);
+                secondStart = 60;
 
-            long secondesRestantes = (secondStart - (diff/1000)%60);
+                if (seconds % 60 == 0) {
+                    secondStart = 0;
+                }
 
-            if(secondesRestantes%60 == 0){
-                minutesRestantes += 1;
+                secondesRestantes = (secondStart - (diff / 1000) % 60);
+
+                if (secondesRestantes % 60 == 0) {
+                    minutesRestantes += 1;
+                }
             }
+            result = "" + minutesRestantes + ":" + Constance.addZero(String.valueOf(secondesRestantes));
 
-            result = "" +  minutesRestantes + ":" + Constance.addZero(String.valueOf(secondesRestantes));
         }
         else{
             result = getResources().getString(R.string.libelle_full_life);
         }
 
         dao.close();
+
+        Log.i("INITIALISE", "" + dateLastLife.get(Calendar.HOUR_OF_DAY) + ":" + dateLastLife.get(Calendar.MINUTE) + ":" + dateLastLife.get(Calendar.SECOND));
 
         return result;
     }
