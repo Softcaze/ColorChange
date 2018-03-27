@@ -31,6 +31,8 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
     private List<Vehicule> vehicules = new ArrayList<Vehicule>();
     private int color = 0;
     private int distance = 0;
+    boolean pause = false;
+    private String WATCH_DOG = "barabulka";
 
     private boolean isCanceled = false;
 
@@ -77,7 +79,7 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
                         break;
                     }
 
-                    /*if (pause) {
+                    if (pause) {
                         synchronized (WATCH_DOG) {
                             try {
                                 WATCH_DOG.wait();
@@ -86,7 +88,7 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
                             }
                             pause = false;
                         }
-                    }*/
+                    }
                 }
 
                 /*try {
@@ -116,7 +118,7 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
     }
 
     /**Wake up task from sleeping*/
-    /*public void wakeUp() {
+    public void wakeUp() {
         synchronized(WATCH_DOG){
             WATCH_DOG.notify();
         }
@@ -128,5 +130,5 @@ public class ManagerDoor extends AsyncTask<Integer, Void, Void> {
 
    public boolean getPause() {
         return pause;
-    }*/
+    }
 }

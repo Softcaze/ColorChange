@@ -92,7 +92,7 @@ public class ListLevelAdapter extends ArrayAdapter<Level> {
         }
 
         // Populate the data into the template view using the data object
-        holder.name_lvl.setText("Level " + myLevel.getNum());
+        holder.name_lvl.setText(getContext().getResources().getString(R.string.libelle_lvl) + " " + myLevel.getNum());
 
         for(int i = 0; i < holder.img.size(); i++){
             if(myLevel.getCouleurs().size() == i){

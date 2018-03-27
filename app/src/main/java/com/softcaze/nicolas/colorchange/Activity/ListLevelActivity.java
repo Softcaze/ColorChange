@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ListLevelActivity extends Activity {
@@ -69,7 +70,15 @@ public class ListLevelActivity extends Activity {
         /**
          * Initialise Time Life
          */
-        timeLife.setText(initializeTimeLife());
+        dao.open();
+        if(dao.getNbrLife() < Constance.NBR_LIFE_MAX){
+            timeLife.setText(initializeTimeLife());
+        }
+        else{
+            dao.saveTimeLastLife("");
+            timeLife.setText("" + getResources().getString(R.string.libelle_full_life));
+        }
+        dao.close();
 
         loadDataBDD();
 
@@ -81,8 +90,6 @@ public class ListLevelActivity extends Activity {
         nbr_star.setText(String.valueOf(myWorld.getNumberStars()));
         img_monde.setImageResource(myWorld.getImg());
 
-        Log.i("BEFORE NEW", "" + dateLastLife.get(Calendar.HOUR_OF_DAY) + ":" + dateLastLife.get(Calendar.MINUTE) + ":" + dateLastLife.get(Calendar.SECOND));
-
         taskRefresh = new RefreshLifeUser(user, dateLastLife, new SyncTimeLife() {
             @Override
             public void onTaskCompleted(User u) {
@@ -92,11 +99,12 @@ public class ListLevelActivity extends Activity {
 
         dao.open();
 
-        if(Constance.NBR_LIFE_MAX != dao.getNbrLife()) {
+        if(dao.getNbrLife() < Constance.NBR_LIFE_MAX) {
             taskRefresh.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else{
             if(taskRefresh.getStatus() != AsyncTask.Status.RUNNING){
+                dao.saveTimeLastLife("");
                 timeLife.setText(getResources().getString(R.string.libelle_full_life));
             }
         }
@@ -305,6 +313,9 @@ public class ListLevelActivity extends Activity {
 
         if(user.getNbrLife() == Constance.NBR_LIFE_MAX){
             if(taskRefresh.getStatus() == AsyncTask.Status.RUNNING){
+                dao.open();
+                dao.saveTimeLastLife("");
+                dao.close();
                 result = getResources().getString(R.string.libelle_full_life);
                 taskRefresh.cancel(true);
             }
@@ -328,7 +339,7 @@ public class ListLevelActivity extends Activity {
                     else{
                         long timeActu = System.currentTimeMillis();
                         dateLastLife.setTimeInMillis(timeActu);
-                        user.setTimeLastLife(timeActu - dateLastLife.getTimeInMillis());
+                        user.setTimeLastLife(timeActu);
                         dao.saveTimeLastLife(String.valueOf(timeActu));
                     }
 
@@ -338,6 +349,9 @@ public class ListLevelActivity extends Activity {
                 else{
                     if(taskRefresh.getStatus() == AsyncTask.Status.RUNNING){
                         result = getResources().getString(R.string.libelle_full_life);
+                        dao.open();
+                        dao.saveTimeLastLife("");
+                        dao.close();
                         taskRefresh.cancel(true);
                     }
                 }
@@ -378,17 +392,17 @@ public class ListLevelActivity extends Activity {
             long seconds = diff / 1000;
             long minutes = seconds / 60;
 
+            Log.i("LISTLEVELACTIVITY", "MINUTES : " + minutes);
+
             long minutesRestantes;
             long secondesRestantes;
             long secondStart;
-
-            Log.i("Minutes", "Min : " + minutes);
 
             if(minutes >= Constance.TIME_BETWEEN_LIFE){
                 int nbrLifeAdded = (int) (minutes/Constance.TIME_BETWEEN_LIFE);
 
 
-                if(dao.getNbrLife() + nbrLifeAdded <= Constance.NBR_LIFE_MAX){
+                if(dao.getNbrLife() + nbrLifeAdded < Constance.NBR_LIFE_MAX){
                     try{
                         user.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
                         dao.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
@@ -404,6 +418,10 @@ public class ListLevelActivity extends Activity {
                         user.setNbrLife(Constance.NBR_LIFE_MAX);
                         dao.setNbrLife(Constance.NBR_LIFE_MAX);
                         nbrLife.setText("" + Constance.NBR_LIFE_MAX);
+
+                        dao.saveTimeLastLife("");
+                        result = getResources().getString(R.string.libelle_full_life);
+                        return result;
                     }
                     catch(Exception e){
                         Log.i("ADDING LIFE MAX USER", "Exception e : " + e);
@@ -411,15 +429,6 @@ public class ListLevelActivity extends Activity {
                 }
 
                 minutesRestantes = minutes - (nbrLifeAdded * Constance.TIME_BETWEEN_LIFE);
-
-                Log.i("LIST LEVEL"," MINUTES : " + minutes);
-
-                dateLastLife = dateActu;
-                dateLastLife.set(Calendar.MINUTE, (int) (Constance.TIME_BETWEEN_LIFE - minutesRestantes));
-                dateLastLife.set(Calendar.SECOND, (int) minutesRestantes*60);
-
-                user.setTimeLastLife(dateLastLife.getTimeInMillis());
-                dao.saveTimeLastLife(String.valueOf(user.getTimeLastLife()));
 
                 secondStart = 60;
 
@@ -432,6 +441,13 @@ public class ListLevelActivity extends Activity {
                 if (secondesRestantes % 60 == 0) {
                     minutesRestantes += 1;
                 }
+
+                dateLastLife = dateActu;
+                dateLastLife.set(Calendar.MINUTE, dateActu.get(Calendar.MINUTE) - (int) minutesRestantes);
+                dateLastLife.set(Calendar.SECOND, dateActu.get(Calendar.SECOND) - (60 - (int) secondesRestantes));
+
+                user.setTimeLastLife(dateLastLife.getTimeInMillis());
+                dao.saveTimeLastLife(String.valueOf(user.getTimeLastLife()));
             }
             else{
                 minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - diff / 1000 / 60);
@@ -451,6 +467,7 @@ public class ListLevelActivity extends Activity {
 
         }
         else{
+            dao.saveTimeLastLife("");
             result = getResources().getString(R.string.libelle_full_life);
         }
 

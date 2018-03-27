@@ -58,10 +58,10 @@ public class PlayActivity extends Activity {
 
         format = new SimpleDateFormat("mm:ss");
 
-        w1 = new World(1, "World 1", R.drawable.americanfootball, 0, HAUTEUR_ECRAN);
-        w2 = new World(2, "World 2", R.drawable.racing, 10, HAUTEUR_ECRAN);
-        w3 = new World(3, "World 3", R.drawable.aireplane, 20, HAUTEUR_ECRAN);
-        w4 = new World(4, "World 4", R.drawable.kayak, 30, HAUTEUR_ECRAN);
+        w1 = new World(1, getResources().getString(R.string.tab_text_1) +  " 1", R.drawable.americanfootball, 0, HAUTEUR_ECRAN);
+        w2 = new World(2, getResources().getString(R.string.tab_text_1) +  " 2", R.drawable.racing, 10, HAUTEUR_ECRAN);
+        w3 = new World(3, getResources().getString(R.string.tab_text_1) +  " 3", R.drawable.aireplane, 20, HAUTEUR_ECRAN);
+        w4 = new World(4, getResources().getString(R.string.tab_text_1) +  " 4", R.drawable.kayak, 30, HAUTEUR_ECRAN);
 
         listWorld.add(w1);
         listWorld.add(w2);
@@ -77,7 +77,15 @@ public class PlayActivity extends Activity {
         /**
          * Initialise Time Life
          */
-        timeLife.setText(initializeTimeLife());
+        dao.open();
+        if(dao.getNbrLife() < Constance.NBR_LIFE_MAX){
+            timeLife.setText(initializeTimeLife());
+        }
+        else{
+            dao.saveTimeLastLife("");
+            timeLife.setText("" + getResources().getString(R.string.libelle_full_life));
+        }
+        dao.close();
 
         /***********************************/
         /*** SET ON CLICK ONGLET "WORLD" ***/
@@ -305,11 +313,12 @@ public class PlayActivity extends Activity {
 
         dao.open();
 
-        if(Constance.NBR_LIFE_MAX != dao.getNbrLife()) {
+        if(dao.getNbrLife() < Constance.NBR_LIFE_MAX) {
             taskRefresh.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else{
             if(taskRefresh.getStatus() != AsyncTask.Status.RUNNING){
+                dao.saveTimeLastLife("");
                 timeLife.setText(getResources().getString(R.string.libelle_full_life));
             }
         }
@@ -472,6 +481,9 @@ public class PlayActivity extends Activity {
         if(user.getNbrLife() == Constance.NBR_LIFE_MAX){
             if(taskRefresh.getStatus() == AsyncTask.Status.RUNNING){
                 result = getResources().getString(R.string.libelle_full_life);
+                dao.open();
+                dao.saveTimeLastLife("");
+                dao.close();
                 taskRefresh.cancel(true);
             }
         }
@@ -494,7 +506,7 @@ public class PlayActivity extends Activity {
                     else{
                         long timeActu = System.currentTimeMillis();
                         dateLastLife.setTimeInMillis(timeActu);
-                        user.setTimeLastLife(timeActu - dateLastLife.getTimeInMillis());
+                        user.setTimeLastLife(timeActu);
                         dao.saveTimeLastLife(String.valueOf(timeActu));
                     }
 
@@ -504,6 +516,9 @@ public class PlayActivity extends Activity {
                 else{
                     if(taskRefresh.getStatus() == AsyncTask.Status.RUNNING){
                         result = getResources().getString(R.string.libelle_full_life);
+                        dao.open();
+                        dao.saveTimeLastLife("");
+                        dao.close();
                         taskRefresh.cancel(true);
                     }
                 }
@@ -540,6 +555,8 @@ public class PlayActivity extends Activity {
         if(!dao.getTimeLastLife().equals("")) {
             dateLastLife.setTimeInMillis(Long.valueOf(dao.getTimeLastLife()));
 
+            Log.i("PLAY ACTIVITY", "Date actu : " + dateActu.getTimeInMillis() + " Date Last : " + dao.getTimeLastLife());
+
             long diff = dateActu.getTimeInMillis() - Long.valueOf(dao.getTimeLastLife());
             long seconds = diff / 1000;
             long minutes = seconds / 60;
@@ -568,6 +585,10 @@ public class PlayActivity extends Activity {
                         user.setNbrLife(Constance.NBR_LIFE_MAX);
                         dao.setNbrLife(Constance.NBR_LIFE_MAX);
                         nbrLife.setText("" + Constance.NBR_LIFE_MAX);
+
+                        dao.saveTimeLastLife("");
+                        result = getResources().getString(R.string.libelle_full_life);
+                        return result;
                     }
                     catch(Exception e){
                         Log.i("ADDING LIFE MAX USER", "Exception e : " + e);
@@ -575,8 +596,6 @@ public class PlayActivity extends Activity {
                 }
 
                 minutesRestantes = minutes%Constance.TIME_BETWEEN_LIFE;
-
-                dateLastLife.setTimeInMillis(minutesRestantes*60*1000);
 
                 secondStart = 60;
 
@@ -589,6 +608,13 @@ public class PlayActivity extends Activity {
                 if (secondesRestantes % 60 == 0) {
                     minutesRestantes += 1;
                 }
+
+                dateLastLife = dateActu;
+                dateLastLife.set(Calendar.MINUTE, dateActu.get(Calendar.MINUTE) - (int) minutesRestantes);
+                dateLastLife.set(Calendar.SECOND, dateActu.get(Calendar.SECOND) - (60 - (int) secondesRestantes));
+
+                user.setTimeLastLife(dateLastLife.getTimeInMillis());
+                dao.saveTimeLastLife(String.valueOf(user.getTimeLastLife()));
             }
             else{
                 minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - diff / 1000 / 60);
@@ -608,10 +634,13 @@ public class PlayActivity extends Activity {
 
         }
         else{
+            dao.saveTimeLastLife("");
             result = getResources().getString(R.string.libelle_full_life);
         }
 
         dao.close();
+
+        Log.i("PLAY ACTIVITY", "RESULT : " + result);
 
         return result;
     }

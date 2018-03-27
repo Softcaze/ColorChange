@@ -45,4 +45,13 @@
     <string name="shop">SHOP</string>
     <string name="libelle__tutoriel_continue">Tap to continue</string>
     <string name="libelle_full_life">Full</string>
+    <string name="setting_son">Sound</string>
+    <string name="setting_yes">Yes</string>
+    <string name="setting_report_bug">Report a bug</string>
+    <string name="setting_rate_us">Rate us</string>
+    <string name="setting_languages">Languages</string>
+    <string name="setting_notifications">Notifications</string>
+    <string name="setting_no">No</string>
+    <string name="shop_free">Free</string>
+    <string name="get_hearts">Get hearts</string>
 </resources>

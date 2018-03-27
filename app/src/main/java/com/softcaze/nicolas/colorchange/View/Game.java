@@ -30,6 +30,7 @@ import com.softcaze.nicolas.colorchange.Model.Global;
 import com.softcaze.nicolas.colorchange.Model.ImageAnim;
 import com.softcaze.nicolas.colorchange.Model.LaneColor;
 import com.softcaze.nicolas.colorchange.Model.Level;
+import com.softcaze.nicolas.colorchange.Model.Objet;
 import com.softcaze.nicolas.colorchange.Model.User;
 import com.softcaze.nicolas.colorchange.Model.Vehicule;
 import com.softcaze.nicolas.colorchange.Model.World;
@@ -96,6 +97,8 @@ public class Game extends View {
     protected boolean hasRevive = false;
 
     protected User user;
+    protected Objet btnPause;
+
 
     // ABOUT TUTORIEL FIRST USE
     protected int firstUse = Constance.TRUE;
@@ -113,6 +116,13 @@ public class Game extends View {
         HAUTEUR_ECRAN = hauteur;
 
         dao = new DAO(context);
+
+        btnPause = new Objet();
+
+        Bitmap logoPause = Constance.getResizedBitmap(BitmapFactory.decodeResource(getResources(), intPause), LARGEUR_ECRAN / 13, 0);
+        btnPause.setImg(logoPause);
+        btnPause.setX(LARGEUR_ECRAN - logoPause.getWidth() - logoPause.getWidth() / 2);
+        btnPause.setY(HAUTEUR_ECRAN / 30 - logoPause.getHeight() / 2);
 
         dao.open();
 
@@ -172,7 +182,6 @@ public class Game extends View {
         paintBorderRect.setColor(Color.rgb(169,169,169));
 
         if(etatGame.getEtat() == Constance.REWARDING){
-            Log.i("REWARDING", " CA PASSE");
             etatGame.setEtat(Constance.TUTORIEL);
         }
 
@@ -232,23 +241,23 @@ public class Game extends View {
             canvas.drawText("" + score, LARGEUR_ECRAN / 2, HAUTEUR_ECRAN / 30 + paintScore.getTextSize() / 2, paintScore);
         }
 
+
         // Affichage Pause button
-        Bitmap logoPause = Constance.getResizedBitmap(BitmapFactory.decodeResource(getResources(), intPause), LARGEUR_ECRAN / 13, 0);
-        canvas.drawBitmap(logoPause, LARGEUR_ECRAN - logoPause.getWidth() - logoPause.getWidth() / 2, HAUTEUR_ECRAN / 30 - logoPause.getHeight() / 2, null);
+        //canvas.drawBitmap(btnPause.getImg(), btnPause.getX(), btnPause.getY(), null);
 
         Bitmap star = Constance.getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.star), LARGEUR_ECRAN/15, 0);
 
         if(score >= levelActu.getScoreStar3()){
-            canvas.drawBitmap(star, LARGEUR_ECRAN - logoPause.getWidth() - logoPause.getWidth() / 2 - star.getWidth()/2 - star.getWidth() - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
-            canvas.drawBitmap(star, LARGEUR_ECRAN - logoPause.getWidth() - logoPause.getWidth() / 2 - star.getWidth()/2 - star.getWidth()*2 - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
-            canvas.drawBitmap(star, LARGEUR_ECRAN - logoPause.getWidth() - logoPause.getWidth() / 2 - star.getWidth()/2 - star.getWidth()*3 - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
+            canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth() - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
+            canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth()*2 - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
+            canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth()*3 - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
         }
         else if(score >= levelActu.getScoreStar2()){
-            canvas.drawBitmap(star, LARGEUR_ECRAN - logoPause.getWidth() - logoPause.getWidth() / 2 - star.getWidth()/2 - star.getWidth() - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
-            canvas.drawBitmap(star, LARGEUR_ECRAN - logoPause.getWidth() - logoPause.getWidth() / 2 - star.getWidth()/2 - star.getWidth()*2 - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
+            canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth() - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
+            canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth()*2 - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
         }
         else if(score >= levelActu.getScoreStar1()){
-            canvas.drawBitmap(star, LARGEUR_ECRAN - logoPause.getWidth() - logoPause.getWidth() / 2 - star.getWidth()/2 - star.getWidth() - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
+            canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth() - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
         }
 
         /**
@@ -257,7 +266,7 @@ public class Game extends View {
         for (int i = listVehicules.size() - 1; i >= 0; i--) {
             if (listVehicules.get(i).getImg() != null) {
                 canvas.drawBitmap(listVehicules.get(i).getImg(), listVehicules.get(i).getX(), listVehicules.get(i).getY(), null);
-                if(etatGame.getEtat() != Constance.END){
+                if(etatGame.getEtat() != Constance.END && !task.getPause()){
                     listVehicules.get(i).setY(listVehicules.get(i).getY() + HAUTEUR_ECRAN / varGlobal.getVitesse());
                 }
             }
@@ -795,6 +804,16 @@ public class Game extends View {
         }
         else if(etatGame.getEtat() == Constance.EN_JEU){
             if(event.getAction() == MotionEvent.ACTION_DOWN){
+                // Click on "Pause" button
+                /*if(btnPause.isClicked(event.getX(), event.getY())){
+                    if(task.getPause()){
+                        task.wakeUp();
+                    }
+                    else{
+                        task.pauseMyTask();
+                    }
+                } */
+
                 //task.cancel(true);
                 for(int i = 0; i < listColorBtn.size(); i++){
                     if (listColorBtn.get(i).isClicked(event.getX(), event.getY())) {
@@ -806,82 +825,84 @@ public class Game extends View {
             }
         }
         else if(etatGame.getEtat() == Constance.END){
-            // Si l'utilisateur clique sur 'Revive'
-            if(event.getX() >= btnXRevive && event.getX() <= btnXRevive + btnWidth && event.getY() >= btnYRevive && event.getY() <= btnYRevive + btnHeight){
-                if(etatGame.hasRevive()){
-                    // Lancer la pub vidéo
-                    if (mRewardedVideoAd.isLoaded()) {
-                        try{
-                            mRewardedVideoAd.show();
+            if(event.getAction() == MotionEvent.ACTION_UP){
+                // Si l'utilisateur clique sur 'Revive'
+                if(event.getX() >= btnXRevive && event.getX() <= btnXRevive + btnWidth && event.getY() >= btnYRevive && event.getY() <= btnYRevive + btnHeight){
+                    if(etatGame.hasRevive()){
+                        // Lancer la pub vidéo
+                        if (mRewardedVideoAd.isLoaded()) {
+                            try{
+                                mRewardedVideoAd.show();
+                            }
+                            catch (Exception e){
+                                Log.i("Load RewardedVideoAd", "Exception : " + e);
+                            }
                         }
-                        catch (Exception e){
-                            Log.i("Load RewardedVideoAd", "Exception : " + e);
+                        else{
+                        }
+                    }
+                }
+
+                // Si l'utilisateur clique sur 'Again'
+                if(event.getX() >= btnXAgain && event.getX() <= btnXAgain + btnWidth && event.getY() >= btnYAgain && event.getY() <= btnYAgain + btnHeight){
+                    if(user.getNbrLife() > 0) {
+                        etatGame.setHasRevive(true);
+                        etatGame.setEtat(Constance.TUTORIEL);
+                        listVehicules = new ArrayList<Vehicule>();
+                        score = 0;
+                        varGlobal.setVitesse(levelActu.getSpeedStart());
+                    }
+                    else{
+                        Toast.makeText(getContext(), "Plus de vie", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                // Si l'utilisateur clique sur 'Menu'
+                if(event.getX() >= btnXMenu && event.getX() <= btnXMenu + btnMenuWidth && event.getY() >= btnYMenu && event.getY() <= btnYMenu + btnHeight){
+                    Bundle b = new Bundle();
+
+                    // On re check en base le nbr de vie, il est possible que l'user en est gagné une en regardant une video de récompense
+                    dao.open();
+
+                    user.setNbrLife(dao.getNbrLife());
+
+                    dao.close();
+
+                    b.putSerializable("worldClicked", worldActu);
+                    b.putSerializable("listWorld", (Serializable) listWorld);
+                    b.putSerializable("user", user);
+
+                    Intent intent = new Intent(getContext(), ListLevelActivity.class);
+
+                    intent.putExtras(b);
+                    getContext().startActivity(intent);
+                }
+
+                // Si l'utilisateur clique sur 'Next'
+                if(event.getX() >= btnXNext && event.getX() <= btnXNext + btnNextWidth && event.getY() >= btnYNext && event.getY() <= btnYNext + btnHeight){
+                    if(user.getNbrLife() > 0) {
+                        if (levelActu.getNum() != worldActu.getlevels().size()) {
+                            Bundle b = new Bundle();
+
+                            b.putSerializable("levelClicked", worldActu.getLevel(levelActu.getNum()));
+                            b.putSerializable("worldActu", worldActu);
+                            b.putSerializable("listWorld", (Serializable) listWorld);
+                            b.putSerializable("user", user);
+
+                            Intent intent = new Intent(getContext(), TransitionActivityView.class);
+
+                            intent.putExtras(b);
+                            getContext().startActivity(intent);
                         }
                     }
                     else{
+                        Toast.makeText(getContext(), "Plus de vie", Toast.LENGTH_LONG).show();
                     }
-                }
-            }
-
-            // Si l'utilisateur clique sur 'Again'
-            if(event.getX() >= btnXAgain && event.getX() <= btnXAgain + btnWidth && event.getY() >= btnYAgain && event.getY() <= btnYAgain + btnHeight){
-                if(user.getNbrLife() > 0) {
-                    etatGame.setHasRevive(true);
-                    etatGame.setEtat(Constance.TUTORIEL);
-                    listVehicules = new ArrayList<Vehicule>();
-                    score = 0;
-                    varGlobal.setVitesse(levelActu.getSpeedStart());
-                }
-                else{
-                    Toast.makeText(getContext(), "Plus de vie", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            // Si l'utilisateur clique sur 'Menu'
-            if(event.getX() >= btnXMenu && event.getX() <= btnXMenu + btnMenuWidth && event.getY() >= btnYMenu && event.getY() <= btnYMenu + btnHeight){
-                Bundle b = new Bundle();
-
-                // On re check en base le nbr de vie, il est possible que l'user en est gagné une en regardant une video de récompense
-                dao.open();
-
-                user.setNbrLife(dao.getNbrLife());
-
-                dao.close();
-
-                b.putSerializable("worldClicked", worldActu);
-                b.putSerializable("listWorld", (Serializable) listWorld);
-                b.putSerializable("user", user);
-
-                Intent intent = new Intent(getContext(), ListLevelActivity.class);
-
-                intent.putExtras(b);
-                getContext().startActivity(intent);
-            }
-
-            // Si l'utilisateur clique sur 'Next'
-            if(event.getX() >= btnXNext && event.getX() <= btnXNext + btnNextWidth && event.getY() >= btnYNext && event.getY() <= btnYNext + btnHeight){
-                if(user.getNbrLife() > 0) {
-                    if (levelActu.getNum() != worldActu.getlevels().size()) {
-                        Bundle b = new Bundle();
-
-                        b.putSerializable("levelClicked", worldActu.getLevel(levelActu.getNum()));
-                        b.putSerializable("worldActu", worldActu);
-                        b.putSerializable("listWorld", (Serializable) listWorld);
-                        b.putSerializable("user", user);
-
-                        Intent intent = new Intent(getContext(), TransitionActivityView.class);
-
-                        intent.putExtras(b);
-                        getContext().startActivity(intent);
-                    }
-                }
-                else{
-                    Toast.makeText(getContext(), "Plus de vie", Toast.LENGTH_LONG).show();
                 }
             }
         }
 
-        return super.onTouchEvent(event);
+        return true;
     }
 
     public void createButtonEnd(int left, int top, int right, int bottom, int color, Canvas canvas, int drawable, String txt){

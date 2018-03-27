@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey"
+    tools:context="com.softcaze.nicolas.colorchange.Activity.ShopActivity">
+
+    <RelativeLayout
+        android:id="@+id/header_shop"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/shop_img"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/shop_cart"/>
+
+        <TextView
+            android:layout_toRightOf="@id/shop_img"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="32dp"
+            android:textStyle="bold"
+            android:text="@string/get_hearts"/>
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_below="@id/header_shop"
+        android:layout_width="match_parent"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/rounded_white_hard"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:id="@+id/heart_1"
+                android:src="@drawable/heart"
+                android:layout_width="25dp"
+                android:layout_marginLeft="30dp"
+                android:layout_centerVertical="true"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_marginLeft="20dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:text="x1"
+                android:layout_toRightOf="@id/heart_1"/>
+
+            <RelativeLayout
+                android:layout_width="120dp"
+                android:background="@drawable/rounded_white_green_hard"
+                android:layout_alignParentRight="true"
+                android:layout_height="45dp">
+
+                <ImageView
+                    android:id="@+id/txt_ad_app"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/application_ad"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_toLeftOf="@id/txt_ad_app"
+                    android:textColor="@color/white"
+                    android:layout_marginRight="15dp"
+                    android:text="@string/shop_free"/>
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/rounded_white_hard"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/heart_2"
+                android:src="@drawable/heart"
+                android:layout_width="25dp"
+                android:layout_marginLeft="30dp"
+                android:layout_centerVertical="true"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_marginLeft="20dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:text="x5"
+                android:layout_toRightOf="@id/heart_2"/>
+
+            <RelativeLayout
+                android:layout_width="75dp"
+                android:background="@drawable/rounded_white_dark_grey_hard"
+                android:layout_alignParentRight="true"
+                android:layout_height="45dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="15dp"
+                    android:text="1,99 €"/>
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/rounded_white_hard"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/heart_3"
+                android:src="@drawable/heart"
+                android:layout_width="25dp"
+                android:layout_marginLeft="30dp"
+                android:layout_centerVertical="true"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_marginLeft="20dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:text="x5"
+                android:layout_toRightOf="@id/heart_3"/>
+
+            <RelativeLayout
+                android:layout_width="75dp"
+                android:background="@drawable/rounded_white_dark_grey_hard"
+                android:layout_alignParentRight="true"
+                android:layout_height="45dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="15dp"
+                    android:text="3,89 €"/>
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/rounded_white_hard"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/heart_4"
+                android:src="@drawable/heart"
+                android:layout_width="25dp"
+                android:layout_marginLeft="30dp"
+                android:layout_centerVertical="true"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_marginLeft="20dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:text="x25"
+                android:layout_toRightOf="@id/heart_4"/>
+
+            <RelativeLayout
+                android:layout_width="75dp"
+                android:background="@drawable/rounded_white_dark_grey_hard"
+                android:layout_alignParentRight="true"
+                android:layout_height="45dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/white"
+                    android:text="9,99 €"/>
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/rounded_white_hard"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/heart_5"
+                android:src="@drawable/heart"
+                android:layout_width="25dp"
+                android:layout_marginLeft="30dp"
+                android:layout_centerVertical="true"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_marginLeft="20dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:text="x50"
+                android:layout_toRightOf="@id/heart_5"/>
+
+            <RelativeLayout
+                android:layout_width="75dp"
+                android:background="@drawable/rounded_white_dark_grey_hard"
+                android:layout_alignParentRight="true"
+                android:layout_height="45dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/white"
+                    android:text="18,99 €"/>
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

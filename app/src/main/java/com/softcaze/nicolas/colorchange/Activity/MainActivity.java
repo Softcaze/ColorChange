@@ -62,6 +62,10 @@ public class MainActivity extends FragmentActivity {
 
         dao = new DAO(this);
 
+        dao.open();
+        Log.i("ON CREATE", "NBR LIFE : " + dao.getNbrLife());
+        dao.close();
+
         format = new SimpleDateFormat("mm:ss");
 
         user = new User();
@@ -69,7 +73,16 @@ public class MainActivity extends FragmentActivity {
         /**
          * Initialise Time Life
          */
-        timeLife.setText(initializeTimeLife());
+        dao.open();
+        if(dao.getNbrLife() < Constance.NBR_LIFE_MAX){
+            timeLife.setText(initializeTimeLife());
+        }
+        else{
+            timeLife.setText("" + getResources().getString(R.string.libelle_full_life));
+            dao.saveTimeLastLife("");
+        }
+        dao.close();
+
 
         // If user got INTERNET
        /*if(isOnline()){
@@ -78,6 +91,16 @@ public class MainActivity extends FragmentActivity {
         else{
             time = System.currentTimeMillis();
         }*/
+
+        if(android.provider.Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AUTO_TIME, 0) == 1){
+            // Enabled
+            dateActu.setTimeInMillis(System.currentTimeMillis());
+            Log.i("MAIN ACTIVITY", "APPLICATION ENABLED");
+        }
+        else{
+            // Disabled
+            Log.i("MAIN ACTIVITY", "APPLICATION DISABLED");
+        }
 
         dao.open();
 
@@ -102,12 +125,13 @@ public class MainActivity extends FragmentActivity {
 
         dao.open();
 
-        if(Constance.NBR_LIFE_MAX != dao.getNbrLife()) {
+        if(dao.getNbrLife() < Constance.NBR_LIFE_MAX) {
             taskRefresh.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else{
             if(taskRefresh.getStatus() != AsyncTask.Status.RUNNING){
                 timeLife.setText(getResources().getString(R.string.libelle_full_life));
+                dao.saveTimeLastLife("");
             }
         }
 
@@ -153,6 +177,9 @@ public class MainActivity extends FragmentActivity {
                     user.setNbrLife(dao.getNbrLife());
                 }
                 dao.close();
+
+                Intent intent = new Intent(MainActivity.this, ShopActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -162,7 +189,7 @@ public class MainActivity extends FragmentActivity {
         linearSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
             }
         });
@@ -198,6 +225,9 @@ public class MainActivity extends FragmentActivity {
         if(user.getNbrLife() == Constance.NBR_LIFE_MAX){
             if(taskRefresh.getStatus() == AsyncTask.Status.RUNNING){
                 result = getResources().getString(R.string.libelle_full_life);
+                dao.open();
+                dao.saveTimeLastLife("");
+                dao.close();
                 taskRefresh.cancel(true);
             }
         }
@@ -220,7 +250,7 @@ public class MainActivity extends FragmentActivity {
                     else{
                         long timeActu = System.currentTimeMillis();
                         dateLastLife.setTimeInMillis(timeActu);
-                        user.setTimeLastLife(timeActu - dateLastLife.getTimeInMillis());
+                        user.setTimeLastLife(timeActu);
                         dao.saveTimeLastLife(String.valueOf(timeActu));
                     }
 
@@ -230,6 +260,9 @@ public class MainActivity extends FragmentActivity {
                 else{
                     if(taskRefresh.getStatus() == AsyncTask.Status.RUNNING){
                         result = getResources().getString(R.string.libelle_full_life);
+                        dao.open();
+                        dao.saveTimeLastLife("");
+                        dao.close();
                         taskRefresh.cancel(true);
                     }
                 }
@@ -270,6 +303,8 @@ public class MainActivity extends FragmentActivity {
             long seconds = diff / 1000;
             long minutes = seconds / 60;
 
+            Log.i("MAIN ACTIVITY", "Date actu : " + dateActu.getTimeInMillis() + " Date Last : " + dao.getTimeLastLife());
+
             long minutesRestantes;
             long secondesRestantes;
             long secondStart;
@@ -294,6 +329,12 @@ public class MainActivity extends FragmentActivity {
                         user.setNbrLife(Constance.NBR_LIFE_MAX);
                         dao.setNbrLife(Constance.NBR_LIFE_MAX);
                         nbrLife.setText("" + Constance.NBR_LIFE_MAX);
+
+                        result = getResources().getString(R.string.libelle_full_life);
+                        dao.open();
+                        dao.saveTimeLastLife("");
+                        dao.close();
+                        return result;
                     }
                     catch(Exception e){
                         Log.i("ADDING LIFE MAX USER", "Exception e : " + e);
@@ -301,10 +342,6 @@ public class MainActivity extends FragmentActivity {
                 }
 
                 minutesRestantes = minutes%Constance.TIME_BETWEEN_LIFE;
-
-                dateLastLife.setTimeInMillis(minutesRestantes*60*1000);
-                user.setTimeLastLife(dateLastLife.getTimeInMillis());
-                dao.saveTimeLastLife(String.valueOf(user.getTimeLastLife()));
 
                 secondStart = 60;
 
@@ -317,6 +354,14 @@ public class MainActivity extends FragmentActivity {
                 if (secondesRestantes % 60 == 0) {
                     minutesRestantes += 1;
                 }
+
+                dateLastLife = dateActu;
+                dateLastLife.set(Calendar.MINUTE, dateActu.get(Calendar.MINUTE) - (int) minutesRestantes);
+                dateLastLife.set(Calendar.SECOND, dateActu.get(Calendar.SECOND) - (60 - (int) secondesRestantes));
+
+                //dateLastLife.setTimeInMillis(minutesRestantes*60*1000);
+                user.setTimeLastLife(dateLastLife.getTimeInMillis());
+                dao.saveTimeLastLife(String.valueOf(user.getTimeLastLife()));
             }
             else{
                 minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - diff / 1000 / 60);
@@ -337,11 +382,10 @@ public class MainActivity extends FragmentActivity {
         }
         else{
             result = getResources().getString(R.string.libelle_full_life);
+            dao.saveTimeLastLife("");
         }
 
         dao.close();
-
-        Log.i("RETURN INITIALIZE", "DateLAstLife : " + dateLastLife);
 
         return result;
     }
