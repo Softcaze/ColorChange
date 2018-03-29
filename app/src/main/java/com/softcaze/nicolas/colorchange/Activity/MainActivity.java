@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,9 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 public class MainActivity extends FragmentActivity {
-    protected TextView btn_play, btn_setting, btn_shop, btn_rate, nbrLife, timeLife;
+    protected TextView btn_play, btn_setting, btn_shop, btn_rate, nbrLife, timeLife, btn_popin;
     protected LinearLayout linearPlay, linearSetting, linearShop, linearRate;
-    protected ImageView img_play;
+    protected ImageView img_play, heart;
     protected LinearLayout.LayoutParams params;
     protected User user;
     protected DAO dao = null;
@@ -42,29 +43,32 @@ public class MainActivity extends FragmentActivity {
     protected Calendar dateActu = Calendar.getInstance();
     protected SimpleDateFormat format;
     protected Calendar dateLastLife = Calendar.getInstance();
+    protected RelativeLayout popinTime, containerPopin;
+    protected LinearLayout mainLinear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        popinTime = (RelativeLayout) findViewById(R.id.popinTime);
+        containerPopin = (RelativeLayout) findViewById(R.id.containerPopin);
         btn_play = (TextView) findViewById(R.id.btn_play);
         btn_setting = (TextView) findViewById(R.id.btn_setting);
         btn_shop = (TextView) findViewById(R.id.btn_shop);
         btn_rate = (TextView) findViewById(R.id.btn_rate);
         nbrLife = (TextView) findViewById(R.id.nbrLife);
         timeLife = (TextView) findViewById(R.id.timeLife);
+        btn_popin = (TextView) findViewById(R.id.btn_popin);
         linearPlay = (LinearLayout) findViewById(R.id.linearPlay);
         linearSetting = (LinearLayout) findViewById(R.id.linearSetting);
         linearShop = (LinearLayout) findViewById(R.id.linearShop);
         linearRate = (LinearLayout) findViewById(R.id.linearRate);
+        mainLinear = (LinearLayout) findViewById(R.id.mainLinear);
         img_play = (ImageView) findViewById(R.id.img_play);
+        heart = (ImageView) findViewById(R.id.heart);
 
         dao = new DAO(this);
-
-        dao.open();
-        Log.i("ON CREATE", "NBR LIFE : " + dao.getNbrLife());
-        dao.close();
 
         format = new SimpleDateFormat("mm:ss");
 
@@ -73,34 +77,7 @@ public class MainActivity extends FragmentActivity {
         /**
          * Initialise Time Life
          */
-        dao.open();
-        if(dao.getNbrLife() < Constance.NBR_LIFE_MAX){
-            timeLife.setText(initializeTimeLife());
-        }
-        else{
-            timeLife.setText("" + getResources().getString(R.string.libelle_full_life));
-            dao.saveTimeLastLife("");
-        }
-        dao.close();
 
-
-        // If user got INTERNET
-       /*if(isOnline()){
-
-        }
-        else{
-            time = System.currentTimeMillis();
-        }*/
-
-        if(android.provider.Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AUTO_TIME, 0) == 1){
-            // Enabled
-            dateActu.setTimeInMillis(System.currentTimeMillis());
-            Log.i("MAIN ACTIVITY", "APPLICATION ENABLED");
-        }
-        else{
-            // Disabled
-            Log.i("MAIN ACTIVITY", "APPLICATION DISABLED");
-        }
 
         dao.open();
 
@@ -112,20 +89,46 @@ public class MainActivity extends FragmentActivity {
         user.setNbrLife(dao.getNbrLife());
         nbrLife.setText("" + dao.getNbrLife());
 
+        if(dao.getNbrLife() < Constance.NBR_LIFE_MAX){
+            timeLife.setText(initializeTimeLife());
+        }
+        else{
+            dao.saveTimeLastLife("");
+            timeLife.setText("" + getResources().getString(R.string.libelle_full_life));
+        }
         dao.close();
 
-        Log.i("BEFORE NEW REFRESH", "DateLAstLife : " + dateLastLife);
+        checkAutoTime();
 
-        taskRefresh = new RefreshLifeUser(user, dateLastLife, new SyncTimeLife() {
+        taskRefresh = new RefreshLifeUser(user, dateLastLife, getContentResolver(), new SyncTimeLife() {
             @Override
-            public void onTaskCompleted(User u) {
+            public void onTaskCompleted(User u, boolean isAuto) {
                 timeLife.setText(refreshLife(u));
+
+                if(isAuto){
+                    popinTime.setVisibility(View.GONE);
+                    timeLife.setVisibility(View.VISIBLE);
+                    nbrLife.setVisibility(View.VISIBLE);
+                }
+                else{
+                    popinTime.setVisibility(View.VISIBLE);
+                    timeLife.setVisibility(View.GONE);
+                    nbrLife.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        btn_popin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkAutoTime();
             }
         });
 
         dao.open();
 
         if(dao.getNbrLife() < Constance.NBR_LIFE_MAX) {
+            timeLife.setText(initializeTimeLife());
             taskRefresh.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else{
@@ -143,21 +146,23 @@ public class MainActivity extends FragmentActivity {
         linearPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try{
-                    taskRefresh.cancel(true);
+                if(popinTime.getVisibility() != View.VISIBLE){
+                    try{
+                        taskRefresh.cancel(true);
+                    }
+                    catch (Exception e){
+                        Log.i("CLICK ON PLAY", "Impossible d'arreter aynsctask refresh life");
+                    }
+
+                    Intent intent = new Intent(MainActivity.this, PlayActivity.class);
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putSerializable("user", user);
+
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
-                catch (Exception e){
-                    Log.i("CLICK ON PLAY", "Impossible d'arreter aynsctask refresh life");
-                }
-
-                Intent intent = new Intent(MainActivity.this, PlayActivity.class);
-
-                Bundle bundle = new Bundle();
-
-                bundle.putSerializable("user", user);
-
-                intent.putExtras(bundle);
-                startActivity(intent);
             }
         });
 
@@ -167,19 +172,20 @@ public class MainActivity extends FragmentActivity {
         linearShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    dao.open();
 
-                dao.open();
+                    if (dao.getNbrLife() == 0) {
+                        dao.setNbrLife(10);
+                        Toast.makeText(getApplicationContext(), "Vous obtenes 10 vies supplémentaires", Toast.LENGTH_LONG).show();
+                        nbrLife.setText("" + 10);
+                        user.setNbrLife(dao.getNbrLife());
+                    }
+                    dao.close();
 
-                if(dao.getNbrLife() == 0){
-                    dao.setNbrLife(10);
-                    Toast.makeText(getApplicationContext(), "Vous obtenes 10 vies supplémentaires", Toast.LENGTH_LONG).show();
-                    nbrLife.setText("" + 10);
-                    user.setNbrLife(dao.getNbrLife());
+                    Intent intent = new Intent(MainActivity.this, ShopActivity.class);
+                    startActivity(intent);
                 }
-                dao.close();
-
-                Intent intent = new Intent(MainActivity.this, ShopActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -189,8 +195,10 @@ public class MainActivity extends FragmentActivity {
         linearSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -200,7 +208,9 @@ public class MainActivity extends FragmentActivity {
         linearRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(popinTime.getVisibility() != View.VISIBLE){
 
+                }
             }
         });
     }
@@ -317,7 +327,7 @@ public class MainActivity extends FragmentActivity {
                     try{
                         user.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
                         dao.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
-                        nbrLife.setText("" + dao.getNbrLife() + nbrLifeAdded);
+                        nbrLife.setText("" + dao.getNbrLife());
                     }
                     catch(Exception e){
                         Log.i("ADDING LIFE USER", "Exception e : " + e);
@@ -388,5 +398,21 @@ public class MainActivity extends FragmentActivity {
         dao.close();
 
         return result;
+    }
+
+    public void checkAutoTime(){
+        if(android.provider.Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AUTO_TIME, 0) == 1){
+            // Enabled
+            dateActu.setTimeInMillis(System.currentTimeMillis());
+            popinTime.setVisibility(View.GONE);
+            timeLife.setVisibility(View.VISIBLE);
+            nbrLife.setVisibility(View.VISIBLE);
+        }
+        else {
+            // Disabled
+            popinTime.setVisibility(View.VISIBLE);
+            timeLife.setVisibility(View.GONE);
+            nbrLife.setVisibility(View.GONE);
+        }
     }
 }

@@ -54,4 +54,7 @@
     <string name="setting_no">No</string>
     <string name="shop_free">Free</string>
     <string name="get_hearts">Get hearts</string>
+    <string name="title_popin">Warning !</string>
+    <string name="content_popin">To use application, you need to active in your settings \'Automatic date and time\'.</string>
+    <string name="btn_popin">OK, I DID</string>
 </resources>

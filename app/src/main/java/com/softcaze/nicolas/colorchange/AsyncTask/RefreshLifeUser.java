@@ -1,8 +1,11 @@
 package com.softcaze.nicolas.colorchange.AsyncTask;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.softcaze.nicolas.colorchange.Activity.MainActivity;
 import com.softcaze.nicolas.colorchange.Interface.SyncTimeLife;
@@ -22,14 +25,18 @@ public class RefreshLifeUser extends AsyncTask<Void, User, Void>{
     protected Calendar dateActu;
     protected Calendar dateLastLife;
     protected SyncTimeLife syncTimeLife;
+    protected Context context;
+    protected boolean isAutomaticTime = false;
+    protected ContentResolver contentResolver;
 
-    public RefreshLifeUser(User u, Calendar dLastlife, SyncTimeLife s)
+    public RefreshLifeUser(User u, Calendar dLastlife, ContentResolver cR, SyncTimeLife s)
     {
         this.user = u;
         dateActu = Calendar.getInstance();
         dateLastLife = Calendar.getInstance();
         dateLastLife = dLastlife;
         this.syncTimeLife = s;
+        contentResolver = cR;
     }
 
     @Override
@@ -43,6 +50,19 @@ public class RefreshLifeUser extends AsyncTask<Void, User, Void>{
             /*if(user.getNbrLife() == Constance.NBR_LIFE_MAX){
                 break;
             }*/
+
+            if(contentResolver != null){
+                if(android.provider.Settings.Global.getInt(contentResolver, android.provider.Settings.Global.AUTO_TIME, 0) == 1){
+                    // Enabled
+                    dateActu.setTimeInMillis(System.currentTimeMillis());
+                    isAutomaticTime = true;
+                }
+                else {
+                    // Disabled
+                    isAutomaticTime = false;
+                }
+            }
+
 
             try{
                 Thread.sleep(1000);
@@ -81,6 +101,6 @@ public class RefreshLifeUser extends AsyncTask<Void, User, Void>{
     protected void onProgressUpdate(User... values) {
         super.onProgressUpdate(values);
 
-        this.syncTimeLife.onTaskCompleted(user);
+        this.syncTimeLife.onTaskCompleted(user, isAutomaticTime);
     }
 }

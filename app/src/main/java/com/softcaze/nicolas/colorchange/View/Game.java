@@ -248,6 +248,13 @@ public class Game extends View {
         Bitmap star = Constance.getResizedBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.star), LARGEUR_ECRAN/15, 0);
 
         if(score >= levelActu.getScoreStar3()){
+            if(taskSpeedVehic != null){
+                taskSpeedVehic.cancel(true);
+
+                if(taskSpeedVehic.isCancelled()){
+                    taskSpeedVehic = null;
+                }
+            }
             canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth() - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
             canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth()*2 - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
             canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth()*3 - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
@@ -259,6 +266,7 @@ public class Game extends View {
         else if(score >= levelActu.getScoreStar1()){
             canvas.drawBitmap(star, LARGEUR_ECRAN - btnPause.getImg().getWidth() - btnPause.getImg().getWidth() / 2 - star.getWidth()/2 - star.getWidth() - star.getWidth()/4, HAUTEUR_ECRAN/30 - star.getHeight()/2, null);
         }
+
 
         /**
          * AFFICHAGE DU PLATEAU DE JEU

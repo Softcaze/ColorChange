@@ -70,6 +70,20 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
         super.onBackPressed();
 
         if(Game.task != null){
+            if(!Game.task.isCancelled()){
+                dao.open();
+
+                if(dao.getNbrLife() > 0){
+                    user.setNbrLife(user.getNbrLife() - 1);
+                    dao.setNbrLife(dao.getNbrLife() - 1);
+
+                    if(dao.getTimeLastLife().equals("")){
+                        dao.saveTimeLastLife(String.valueOf(System.currentTimeMillis()));
+                    }
+                }
+
+                dao.close();
+            }
             Game.task.cancel(true);
         }
 
@@ -151,7 +165,7 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
         dao.open();
 
         if(dao.getNbrLife() < 10){
-            user.setNbrLife(user.getNbrLife() - 1);
+            user.setNbrLife(user.getNbrLife() + 1);
             dao.setNbrLife(dao.getNbrLife() + 1);
         }
 

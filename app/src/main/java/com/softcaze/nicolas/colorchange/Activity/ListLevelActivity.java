@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,11 +36,12 @@ public class ListLevelActivity extends Activity {
     World myWorld;
     List<World> listWorld = new ArrayList<World>();
 
-    TextView txt_monde_1, nbr_star, nbrLife, timeLife;
-    ImageView img_monde, left_arrow, right_arrow;
+    TextView txt_monde_1, nbr_star, nbrLife, timeLife, btn_popin;
+    ImageView img_monde, left_arrow, right_arrow, heart;
 
     ListLevelAdapter adapter;
     ListView listViewLevel;
+    RelativeLayout popinTime;
 
     DAO dao = null;
 
@@ -67,6 +69,7 @@ public class ListLevelActivity extends Activity {
         listWorld = (List<World>) getIntent().getSerializableExtra("listWorld");
         user = (User) getIntent().getSerializableExtra("user");
 
+
         /**
          * Initialise Time Life
          */
@@ -90,10 +93,30 @@ public class ListLevelActivity extends Activity {
         nbr_star.setText(String.valueOf(myWorld.getNumberStars()));
         img_monde.setImageResource(myWorld.getImg());
 
-        taskRefresh = new RefreshLifeUser(user, dateLastLife, new SyncTimeLife() {
+        checkAutoTime();
+
+        taskRefresh = new RefreshLifeUser(user, dateLastLife, getContentResolver(), new SyncTimeLife() {
             @Override
-            public void onTaskCompleted(User u) {
+            public void onTaskCompleted(User u, boolean isAuto) {
                 timeLife.setText(refreshLife(u));
+
+                if(isAuto){
+                    popinTime.setVisibility(View.GONE);
+                    timeLife.setVisibility(View.VISIBLE);
+                    nbrLife.setVisibility(View.VISIBLE);
+                }
+                else{
+                    popinTime.setVisibility(View.VISIBLE);
+                    timeLife.setVisibility(View.GONE);
+                    nbrLife.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        btn_popin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkAutoTime();
             }
         });
 
@@ -117,17 +140,19 @@ public class ListLevelActivity extends Activity {
         right_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myWorld = new World(getNext(myWorld));
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    myWorld = new World(getNext(myWorld));
 
-                loadDataBDD();
+                    loadDataBDD();
 
-                txt_monde_1.setText(myWorld.getName());
-                nbr_star.setText(String.valueOf(myWorld.getNumberStars()));
-                img_monde.setImageResource(myWorld.getImg());
+                    txt_monde_1.setText(myWorld.getName());
+                    nbr_star.setText(String.valueOf(myWorld.getNumberStars()));
+                    img_monde.setImageResource(myWorld.getImg());
 
-                adapter = new ListLevelAdapter(getApplicationContext(), myWorld.getlevels());
+                    adapter = new ListLevelAdapter(getApplicationContext(), myWorld.getlevels());
 
-                listViewLevel.setAdapter(adapter);
+                    listViewLevel.setAdapter(adapter);
+                }
             }
         });
 
@@ -137,45 +162,47 @@ public class ListLevelActivity extends Activity {
         left_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myWorld = new World(getPrevious(myWorld));
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    myWorld = new World(getPrevious(myWorld));
 
-                loadDataBDD();
+                    loadDataBDD();
 
-                txt_monde_1.setText(myWorld.getName());
-                nbr_star.setText(String.valueOf(myWorld.getNumberStars()));
-                img_monde.setImageResource(myWorld.getImg());
+                    txt_monde_1.setText(myWorld.getName());
+                    nbr_star.setText(String.valueOf(myWorld.getNumberStars()));
+                    img_monde.setImageResource(myWorld.getImg());
 
-                adapter = new ListLevelAdapter(getApplicationContext(), myWorld.getlevels());
+                    adapter = new ListLevelAdapter(getApplicationContext(), myWorld.getlevels());
 
-                listViewLevel.setAdapter(adapter);
+                    listViewLevel.setAdapter(adapter);
+                }
             }
         });
 
         listViewLevel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if(user.getNbrLife() > 0){
-                    try{
-                        taskRefresh.cancel(true);
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    if (user.getNbrLife() > 0) {
+                        try {
+                            taskRefresh.cancel(true);
+                        } catch (Exception e) {
+                            Log.i("LIST LEVEL", "Impossible d'arreter aynsctask refresh life");
+                        }
+
+                        Intent intent = new Intent(ListLevelActivity.this, TransitionActivityView.class);
+
+                        Bundle b = new Bundle();
+
+                        b.putSerializable("levelClicked", myWorld.getlevels().get(position));
+                        b.putSerializable("worldActu", myWorld);
+                        b.putSerializable("listWorld", (Serializable) listWorld);
+                        b.putSerializable("user", user);
+
+                        intent.putExtras(b);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Plus de vie", Toast.LENGTH_LONG).show();
                     }
-                    catch (Exception e){
-                        Log.i("LIST LEVEL", "Impossible d'arreter aynsctask refresh life");
-                    }
-
-                    Intent intent = new Intent(ListLevelActivity.this, TransitionActivityView.class);
-
-                    Bundle b = new Bundle();
-
-                    b.putSerializable("levelClicked", myWorld.getlevels().get(position));
-                    b.putSerializable("worldActu", myWorld);
-                    b.putSerializable("listWorld", (Serializable) listWorld);
-                    b.putSerializable("user", user);
-
-                    intent.putExtras(b);
-                    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Plus de vie", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -243,13 +270,16 @@ public class ListLevelActivity extends Activity {
     }
 
     public void initView(){
+        popinTime = (RelativeLayout) findViewById(R.id.popinTime);
         txt_monde_1 = (TextView) findViewById(R.id.txt_monde_1);
+        btn_popin = (TextView) findViewById(R.id.btn_popin);
         nbrLife = (TextView) findViewById(R.id.nbrLife);
         timeLife = (TextView) findViewById(R.id.timeLife);
         nbr_star = (TextView) findViewById(R.id.nbr_star);
         img_monde = (ImageView) findViewById(R.id.img_monde);
         left_arrow = (ImageView) findViewById(R.id.left_arrow);
         right_arrow = (ImageView) findViewById(R.id.right_arrow);
+        heart = (ImageView) findViewById(R.id.heart);
 
         listViewLevel = (ListView) findViewById(R.id.list_view_level);
     }
@@ -358,6 +388,10 @@ public class ListLevelActivity extends Activity {
             }
 
             long minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - user.getTimeLastLife()/1000/60);
+            if(minutesRestantes < 0){
+                minutesRestantes = 0;
+            }
+
             int secondStart = 60;
 
             if(seconds%60 == 0){
@@ -368,6 +402,10 @@ public class ListLevelActivity extends Activity {
 
             if(secondesRestantes%60 == 0){
                 minutesRestantes += 1;
+            }
+
+            if(secondesRestantes < 0){
+                secondesRestantes = 0;
             }
 
             if(taskRefresh.getStatus() == AsyncTask.Status.RUNNING){
@@ -406,7 +444,7 @@ public class ListLevelActivity extends Activity {
                     try{
                         user.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
                         dao.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
-                        nbrLife.setText("" + dao.getNbrLife() + nbrLifeAdded);
+                        nbrLife.setText("" + dao.getNbrLife());
                     }
                     catch(Exception e){
                         Log.i("ADDING LIFE USER", "Exception e : " + e);
@@ -476,5 +514,21 @@ public class ListLevelActivity extends Activity {
         Log.i("INITIALISE", "" + dateLastLife.get(Calendar.HOUR_OF_DAY) + ":" + dateLastLife.get(Calendar.MINUTE) + ":" + dateLastLife.get(Calendar.SECOND));
 
         return result;
+    }
+
+    public void checkAutoTime(){
+        if(android.provider.Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AUTO_TIME, 0) == 1){
+            // Enabled
+            dateActu.setTimeInMillis(System.currentTimeMillis());
+            popinTime.setVisibility(View.GONE);
+            timeLife.setVisibility(View.VISIBLE);
+            nbrLife.setVisibility(View.VISIBLE);
+        }
+        else {
+            // Disabled
+            popinTime.setVisibility(View.VISIBLE);
+            timeLife.setVisibility(View.GONE);
+            nbrLife.setVisibility(View.GONE);
+        }
     }
 }

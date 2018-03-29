@@ -34,10 +34,10 @@ public class PlayActivity extends Activity {
     List<World> listWorld = new ArrayList<World>();
     ImageView img_monde_1, img_monde_2, img_monde_3, img_monde_4;
     User user;
-    ImageView circle_w1, circle_w2, circle_w3, circle_w4;
+    ImageView circle_w1, circle_w2, circle_w3, circle_w4, heart;
     View lane_1_w2, lane_1_w3, lane_1_w4, lane_3_w2, lane_3_w3, lane_3_w4;
     RelativeLayout lane_2_w2, lane_2_w3, lane_2_w4;
-    TextView nbrLife, timeLife;
+    TextView nbrLife, timeLife, btn_popin;
     protected DAO dao = null;
     protected int HAUTEUR_ECRAN;
     protected long time;
@@ -45,6 +45,7 @@ public class PlayActivity extends Activity {
     protected Calendar dateActu = Calendar.getInstance();
     protected SimpleDateFormat format;
     protected Calendar dateLastLife = Calendar.getInstance();
+    protected RelativeLayout popinTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +71,7 @@ public class PlayActivity extends Activity {
 
         initView();
 
-        loadDataBDD();
-
-        checkLockWorld();
+        checkAutoTime();
 
         /**
          * Initialise Time Life
@@ -87,15 +86,21 @@ public class PlayActivity extends Activity {
         }
         dao.close();
 
+        loadDataBDD();
+
+        checkLockWorld();
+
         /***********************************/
         /*** SET ON CLICK ONGLET "WORLD" ***/
         /***********************************/
         tab_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                container_play.setBackgroundColor(getResources().getColor(R.color.red));
-                tab_1_container.setVisibility(View.VISIBLE);
-                tab_2_container.setVisibility(View.GONE);
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    container_play.setBackgroundColor(getResources().getColor(R.color.red));
+                    tab_1_container.setVisibility(View.VISIBLE);
+                    tab_2_container.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -105,9 +110,18 @@ public class PlayActivity extends Activity {
         tab_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                container_play.setBackgroundColor(getResources().getColor(R.color.dark_grey));
-                tab_1_container.setVisibility(View.GONE);
-                tab_2_container.setVisibility(View.VISIBLE);
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    container_play.setBackgroundColor(getResources().getColor(R.color.dark_grey));
+                    tab_1_container.setVisibility(View.GONE);
+                    tab_2_container.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        btn_popin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkAutoTime();
             }
         });
 
@@ -117,24 +131,25 @@ public class PlayActivity extends Activity {
         container_monde_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user.getNbrStar() >= w1.getNbrStarToLock()) {
-                    try{
-                        taskRefresh.cancel(true);
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    if (user.getNbrStar() >= w1.getNbrStarToLock()) {
+                        try {
+                            taskRefresh.cancel(true);
+                        } catch (Exception e) {
+                            Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
+                        }
+
+                        Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
+
+                        Bundle b = new Bundle();
+
+                        b.putSerializable("listWorld", (Serializable) listWorld);
+                        b.putSerializable("worldClicked", w1);
+                        b.putSerializable("user", user);
+
+                        intent.putExtras(b);
+                        startActivity(intent);
                     }
-                    catch (Exception e){
-                        Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
-                    }
-
-                    Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
-
-                    Bundle b = new Bundle();
-
-                    b.putSerializable("listWorld", (Serializable) listWorld);
-                    b.putSerializable("worldClicked", w1);
-                    b.putSerializable("user", user);
-
-                    intent.putExtras(b);
-                    startActivity(intent);
                 }
             }
         });
@@ -145,24 +160,25 @@ public class PlayActivity extends Activity {
         container_monde_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user.getNbrStar() >= w2.getNbrStarToLock()) {
-                    try{
-                        taskRefresh.cancel(true);
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    if (user.getNbrStar() >= w2.getNbrStarToLock()) {
+                        try {
+                            taskRefresh.cancel(true);
+                        } catch (Exception e) {
+                            Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
+                        }
+
+                        Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
+
+                        Bundle b = new Bundle();
+
+                        b.putSerializable("worldClicked", w2);
+                        b.putSerializable("listWorld", (Serializable) listWorld);
+                        b.putSerializable("user", user);
+
+                        intent.putExtras(b);
+                        startActivity(intent);
                     }
-                    catch (Exception e){
-                        Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
-                    }
-
-                    Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
-
-                    Bundle b = new Bundle();
-
-                    b.putSerializable("worldClicked", w2);
-                    b.putSerializable("listWorld", (Serializable) listWorld);
-                    b.putSerializable("user", user);
-
-                    intent.putExtras(b);
-                    startActivity(intent);
                 }
             }
         });
@@ -173,24 +189,25 @@ public class PlayActivity extends Activity {
         container_monde_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user.getNbrStar() >= w3.getNbrStarToLock()) {
-                    try{
-                        taskRefresh.cancel(true);
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    if (user.getNbrStar() >= w3.getNbrStarToLock()) {
+                        try {
+                            taskRefresh.cancel(true);
+                        } catch (Exception e) {
+                            Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
+                        }
+
+                        Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
+
+                        Bundle b = new Bundle();
+
+                        b.putSerializable("worldClicked", w3);
+                        b.putSerializable("listWorld", (Serializable) listWorld);
+                        b.putSerializable("user", user);
+
+                        intent.putExtras(b);
+                        startActivity(intent);
                     }
-                    catch (Exception e){
-                        Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
-                    }
-
-                    Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
-
-                    Bundle b = new Bundle();
-
-                    b.putSerializable("worldClicked", w3);
-                    b.putSerializable("listWorld", (Serializable) listWorld);
-                    b.putSerializable("user", user);
-
-                    intent.putExtras(b);
-                    startActivity(intent);
                 }
             }
         });
@@ -201,31 +218,33 @@ public class PlayActivity extends Activity {
         container_monde_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user.getNbrStar() >= w4.getNbrStarToLock()) {
+                if(popinTime.getVisibility() != View.VISIBLE) {
+                    if (user.getNbrStar() >= w4.getNbrStarToLock()) {
 
-                    try{
-                        taskRefresh.cancel(true);
+                        try {
+                            taskRefresh.cancel(true);
+                        } catch (Exception e) {
+                            Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
+                        }
+
+                        Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
+
+                        Bundle b = new Bundle();
+
+                        b.putSerializable("worldClicked", w4);
+                        b.putSerializable("listWorld", (Serializable) listWorld);
+                        b.putSerializable("user", user);
+
+                        intent.putExtras(b);
+                        startActivity(intent);
                     }
-                    catch (Exception e){
-                        Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
-                    }
-
-                    Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
-
-                    Bundle b = new Bundle();
-
-                    b.putSerializable("worldClicked", w4);
-                    b.putSerializable("listWorld", (Serializable) listWorld);
-                    b.putSerializable("user", user);
-
-                    intent.putExtras(b);
-                    startActivity(intent);
                 }
             }
         });
     }
 
     public void initView(){
+        popinTime = (RelativeLayout) findViewById(R.id.popinTime);
         container_play = (RelativeLayout) findViewById(R.id.container_play);
         tab_1_container = (RelativeLayout) findViewById(R.id.tab_1_container);
         tab_2_container = (RelativeLayout) findViewById(R.id.tab_2_container);
@@ -233,6 +252,7 @@ public class PlayActivity extends Activity {
         tab_1 = (TextView) findViewById(R.id.tab_1);
         tab_2 = (TextView) findViewById(R.id.tab_2);
 
+        btn_popin = (TextView) findViewById(R.id.btn_popin);
         txt_monde_1 = (TextView) findViewById(R.id.txt_monde_1);
         txt_monde_2 = (TextView) findViewById(R.id.txt_monde_2);
         txt_monde_3 = (TextView) findViewById(R.id.txt_monde_3);
@@ -255,6 +275,7 @@ public class PlayActivity extends Activity {
         img_monde_2 = (ImageView) findViewById(R.id.img_monde_2);
         img_monde_3 = (ImageView) findViewById(R.id.img_monde_3);
         img_monde_4 = (ImageView) findViewById(R.id.img_monde_4);
+        heart = (ImageView) findViewById(R.id.heart);
 
         container_monde_1 = (RelativeLayout) findViewById(R.id.container_monde_1);
         container_monde_2 = (RelativeLayout) findViewById(R.id.container_monde_2);
@@ -304,10 +325,21 @@ public class PlayActivity extends Activity {
 
         dao.close();
 
-        taskRefresh = new RefreshLifeUser(user, dateLastLife, new SyncTimeLife() {
+        taskRefresh = new RefreshLifeUser(user, dateLastLife, getContentResolver(), new SyncTimeLife() {
             @Override
-            public void onTaskCompleted(User u) {
+            public void onTaskCompleted(User u, boolean isAuto) {
                 timeLife.setText(refreshLife(u));
+
+                if(isAuto){
+                    popinTime.setVisibility(View.GONE);
+                    timeLife.setVisibility(View.VISIBLE);
+                    nbrLife.setVisibility(View.VISIBLE);
+                }
+                else{
+                    popinTime.setVisibility(View.VISIBLE);
+                    timeLife.setVisibility(View.GONE);
+                    nbrLife.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -573,7 +605,7 @@ public class PlayActivity extends Activity {
                     try{
                         user.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
                         dao.setNbrLife(dao.getNbrLife() + nbrLifeAdded);
-                        nbrLife.setText("" + dao.getNbrLife() + nbrLifeAdded);
+                        nbrLife.setText("" + dao.getNbrLife());
                     }
                     catch(Exception e){
                         Log.i("ADDING LIFE USER", "Exception e : " + e);
@@ -643,5 +675,21 @@ public class PlayActivity extends Activity {
         Log.i("PLAY ACTIVITY", "RESULT : " + result);
 
         return result;
+    }
+
+    public void checkAutoTime(){
+        if(android.provider.Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AUTO_TIME, 0) == 1){
+            // Enabled
+            dateActu.setTimeInMillis(System.currentTimeMillis());
+            popinTime.setVisibility(View.GONE);
+            timeLife.setVisibility(View.VISIBLE);
+            nbrLife.setVisibility(View.VISIBLE);
+        }
+        else {
+            // Disabled
+            popinTime.setVisibility(View.VISIBLE);
+            timeLife.setVisibility(View.GONE);
+            nbrLife.setVisibility(View.GONE);
+        }
     }
 }

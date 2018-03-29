@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 public class DAO {
-    public static int VERSION = 54;
+    public static int VERSION = 58;
     public static String NOM_DB = "colorchangedatabase.db";
 
     public static final String NOM_TABLE_USER = "user";

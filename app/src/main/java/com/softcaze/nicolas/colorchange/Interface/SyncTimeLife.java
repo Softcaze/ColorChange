@@ -7,5 +7,5 @@ import com.softcaze.nicolas.colorchange.Model.User;
  */
 
 public interface SyncTimeLife {
-    void onTaskCompleted(User u);
+    void onTaskCompleted(User u, boolean isAuto);
 }
