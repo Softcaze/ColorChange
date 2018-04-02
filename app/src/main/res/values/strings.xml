@@ -57,4 +57,8 @@
     <string name="title_popin">Warning !</string>
     <string name="content_popin">To use application, you need to active in your settings \'Automatic date and time\'.</string>
     <string name="btn_popin">OK, I DID</string>
+    <string name="title_popin_no_life">You are 0</string>
+    <string name="content_popin_no_life">Wait to get new lifes or go on shop to buy.</string>
+    <string name="btn1_popin_no_life">SHOP</string>
+    <string name="btn2_popin_no_life">OK</string>
 </resources>

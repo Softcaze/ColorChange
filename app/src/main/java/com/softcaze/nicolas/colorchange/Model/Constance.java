@@ -38,6 +38,7 @@ public class Constance {
     public static final int END = 3;
     public static final int FIRST_USE = 4;
     public static final int REWARDING = 5;
+    public static final int POPUP_OPEN = 6;
 
     // ID PAGE
     public static final int MENU = 1;

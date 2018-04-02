@@ -190,21 +190,21 @@ public class World implements Serializable {
                 lvl_w1 = new Level(17, 210, 32, 60, 92, l17_w1, hauteur/330,0, hauteur/3);
                 this.addLevel(lvl_w1);
 
-                l18_w1.add(R.color.light_grey);l18_w1.add(R.color.green);;l18_w1.add(R.color.yellow);
-                lvl_w1 = new Level(18, 170, 30, 50, 80, l18_w1, hauteur/150,0, hauteur/3);
+                l18_w1.add(R.color.green);l18_w1.add(R.color.red);;l18_w1.add(R.color.blue);
+                lvl_w1 = new Level(18, 210, 30, 50, 80, l18_w1, hauteur/310,0, hauteur/3);
                 this.addLevel(lvl_w1);
 
                 l19_w1.add(R.color.light_grey);l19_w1.add(R.color.green);;l19_w1.add(R.color.yellow);
-                lvl_w1 = new Level(19, 170, 30, 50, 80, l19_w1, hauteur/150,0, hauteur/3);
+                lvl_w1 = new Level(19, 210, 32, 45, 85, l19_w1, hauteur/270,0, hauteur/4);
                 this.addLevel(lvl_w1);
 
-                l20_w1.add(R.color.light_grey);l20_w1.add(R.color.green);;l20_w1.add(R.color.yellow);
-                lvl_w1 = new Level(20, 170, 30, 50, 80, l20_w1, hauteur/150,0, hauteur/3);
+                l20_w1.add(R.color.dark_grey);l20_w1.add(R.color.yellow);;l20_w1.add(R.color.blue);
+                lvl_w1 = new Level(20, 200, 44, 56, 72, l20_w1, hauteur/270,0, hauteur/4);
                 this.addLevel(lvl_w1);
 
 
-                l21_w1.add(R.color.light_grey);l21_w1.add(R.color.green);;l21_w1.add(R.color.yellow);
-                lvl_w1 = new Level(21, 170, 30, 50, 80, l21_w1, hauteur/150,0, hauteur/3);
+                l21_w1.add(R.color.red);l21_w1.add(R.color.blue);;l21_w1.add(R.color.yellow);
+                lvl_w1 = new Level(21, 130, 40, 67, 92, l21_w1, hauteur/500,0, hauteur/4);
                 this.addLevel(lvl_w1);
 
                 l22_w1.add(R.color.light_grey);l22_w1.add(R.color.green);;l22_w1.add(R.color.yellow);

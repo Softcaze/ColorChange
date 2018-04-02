@@ -26,8 +26,6 @@ public class RefreshLifeUser extends AsyncTask<Void, User, Void>{
     protected Calendar dateLastLife;
     protected SyncTimeLife syncTimeLife;
     protected Context context;
-    protected boolean isAutomaticTime = false;
-    protected ContentResolver contentResolver;
 
     public RefreshLifeUser(User u, Calendar dLastlife, ContentResolver cR, SyncTimeLife s)
     {
@@ -36,7 +34,6 @@ public class RefreshLifeUser extends AsyncTask<Void, User, Void>{
         dateLastLife = Calendar.getInstance();
         dateLastLife = dLastlife;
         this.syncTimeLife = s;
-        contentResolver = cR;
     }
 
     @Override
@@ -51,19 +48,6 @@ public class RefreshLifeUser extends AsyncTask<Void, User, Void>{
                 break;
             }*/
 
-            if(contentResolver != null){
-                if(android.provider.Settings.Global.getInt(contentResolver, android.provider.Settings.Global.AUTO_TIME, 0) == 1){
-                    // Enabled
-                    dateActu.setTimeInMillis(System.currentTimeMillis());
-                    isAutomaticTime = true;
-                }
-                else {
-                    // Disabled
-                    isAutomaticTime = false;
-                }
-            }
-
-
             try{
                 Thread.sleep(1000);
 
@@ -77,17 +61,6 @@ public class RefreshLifeUser extends AsyncTask<Void, User, Void>{
                 user.setTimeLastLife(diff);
 
                 publishProgress(user);
-
-                // Checked if life is recovered
-               /* if((Constance.TIME_BETWEEN_LIFE - spendTime) <= 0){
-                    //user.setTimeLastLife(0l);
-                    if(user.getNbrLife() < Constance.NBR_LIFE_MAX){
-                        user.setNbrLife(user.getNbrLife() + 1);
-                    }
-                }
-                else{
-                   // user.setTimeLastLife(spendTime);
-                }*/
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -101,6 +74,6 @@ public class RefreshLifeUser extends AsyncTask<Void, User, Void>{
     protected void onProgressUpdate(User... values) {
         super.onProgressUpdate(values);
 
-        this.syncTimeLife.onTaskCompleted(user, isAutomaticTime);
+        this.syncTimeLife.onTaskCompleted(user);
     }
 }

@@ -18,8 +18,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.softcaze.nicolas.colorchange.Activity.ListLevelActivity;
+import com.softcaze.nicolas.colorchange.Activity.MainActivity;
+import com.softcaze.nicolas.colorchange.Activity.ShopActivity;
 import com.softcaze.nicolas.colorchange.Activity.TransitionActivityView;
 import com.softcaze.nicolas.colorchange.AsyncTask.AnimImageY;
+import com.softcaze.nicolas.colorchange.AsyncTask.CheckAutoTime;
 import com.softcaze.nicolas.colorchange.AsyncTask.ManageSpeedVehic;
 import com.softcaze.nicolas.colorchange.AsyncTask.ManagerDoor;
 import com.softcaze.nicolas.colorchange.Database.DAO;
@@ -31,6 +34,8 @@ import com.softcaze.nicolas.colorchange.Model.ImageAnim;
 import com.softcaze.nicolas.colorchange.Model.LaneColor;
 import com.softcaze.nicolas.colorchange.Model.Level;
 import com.softcaze.nicolas.colorchange.Model.Objet;
+import com.softcaze.nicolas.colorchange.Model.Popup;
+import com.softcaze.nicolas.colorchange.Model.TextInView;
 import com.softcaze.nicolas.colorchange.Model.User;
 import com.softcaze.nicolas.colorchange.Model.Vehicule;
 import com.softcaze.nicolas.colorchange.Model.World;
@@ -55,6 +60,10 @@ public class Game extends View {
     protected int LARGEUR_ECRAN;
     protected int HAUTEUR_ECRAN;
 
+    protected TextInView btn1;
+    protected TextInView btn2;
+
+    protected Popup popup;
     protected Level levelActu;
     protected List<ColorButton> listColorBtn = new ArrayList<ColorButton>();
     protected List<Vehicule> listVehicules = new ArrayList<Vehicule>();
@@ -94,7 +103,6 @@ public class Game extends View {
     public static ManageSpeedVehic taskSpeedVehic;
 
     protected int nbrColumn = 0;
-    protected boolean hasRevive = false;
 
     protected User user;
     protected Objet btnPause;
@@ -711,6 +719,10 @@ public class Game extends View {
                 }
             }
         }
+
+        if(popup.isDisplay()){
+            popup.display(canvas, LARGEUR_ECRAN, HAUTEUR_ECRAN, getContext());
+        }
         invalidate();
     }
 
@@ -861,7 +873,26 @@ public class Game extends View {
                         varGlobal.setVitesse(levelActu.getSpeedStart());
                     }
                     else{
-                        Toast.makeText(getContext(), "Plus de vie", Toast.LENGTH_LONG).show();
+                        etatGame.setEtat(Constance.POPUP_OPEN);
+                        // Création popup plus de vie
+                        float width = LARGEUR_ECRAN - LARGEUR_ECRAN/10;
+                        float height = HAUTEUR_ECRAN - HAUTEUR_ECRAN/3 - HAUTEUR_ECRAN/10;
+                        float x = LARGEUR_ECRAN/10;
+                        float y = HAUTEUR_ECRAN/4;
+                        TextInView title = new TextInView(getContext().getResources().getString(R.string.title_popin_no_life));
+                        TextInView content = new TextInView(getContext().getResources().getString(R.string.content_popin_no_life));
+                        btn1 = new TextInView(getContext().getResources().getString(R.string.btn1_popin_no_life));
+                        btn2 = new TextInView(getContext().getResources().getString(R.string.btn2_popin_no_life));
+
+                        popup.setX(x);
+                        popup.setY(y);
+                        popup.setWidth(width);
+                        popup.setHeight(height);
+                        popup.setDisplay(true);
+                        popup.setTitle(title);
+                        popup.setContent(content);
+                        popup.setBtn1(btn1);
+                        popup.setBtn2(btn2);
                     }
                 }
 
@@ -906,6 +937,21 @@ public class Game extends View {
                     else{
                         Toast.makeText(getContext(), "Plus de vie", Toast.LENGTH_LONG).show();
                     }
+                }
+            }
+        }
+        else if(etatGame.getEtat() == Constance.POPUP_OPEN){
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                // Button SHOP - Popup
+                if (popup.getBtn1().isClicked(event.getX(), event.getY(), getContext())) {
+                    Intent intent = new Intent(getContext(), ShopActivity.class);
+                    getContext().startActivity(intent);
+                }
+
+                // Button OK - Popup
+                if (popup.getBtn2().isClicked(event.getX(), event.getY(), getContext())) {
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    getContext().startActivity(intent);
                 }
             }
         }
@@ -978,6 +1024,8 @@ public class Game extends View {
     }
 
     public void initStaticData(){
+        popup = new Popup(getContext());
+
         // COLOR Button
         btnColorMap.put(R.color.blue, BitmapFactory.decodeResource(getResources(), R.drawable.btn_blue));
         btnColorMap.put(R.color.yellow, BitmapFactory.decodeResource(getResources(), R.drawable.btn_yellow));

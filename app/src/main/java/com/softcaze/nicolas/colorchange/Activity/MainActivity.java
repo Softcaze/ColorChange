@@ -14,8 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.softcaze.nicolas.colorchange.AsyncTask.CheckAutoTime;
 import com.softcaze.nicolas.colorchange.AsyncTask.RefreshLifeUser;
 import com.softcaze.nicolas.colorchange.Database.DAO;
+import com.softcaze.nicolas.colorchange.Interface.SyncIsAutoTime;
 import com.softcaze.nicolas.colorchange.Interface.SyncTimeLife;
 import com.softcaze.nicolas.colorchange.Model.Constance;
 import com.softcaze.nicolas.colorchange.Model.User;
@@ -45,6 +47,8 @@ public class MainActivity extends FragmentActivity {
     protected Calendar dateLastLife = Calendar.getInstance();
     protected RelativeLayout popinTime, containerPopin;
     protected LinearLayout mainLinear;
+    protected static CheckAutoTime taskCheckAutoTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +72,34 @@ public class MainActivity extends FragmentActivity {
         img_play = (ImageView) findViewById(R.id.img_play);
         heart = (ImageView) findViewById(R.id.heart);
 
+        Log.i("Main activity", "On create");
+
         dao = new DAO(this);
 
         format = new SimpleDateFormat("mm:ss");
 
         user = new User();
+
+        if(taskCheckAutoTime == null){
+            taskCheckAutoTime = new CheckAutoTime(getContentResolver(), new SyncIsAutoTime(){
+
+                @Override
+                public void checkingAutoTime(Boolean isAuto) {
+                    checkAutoTime();
+                }
+            });
+
+            taskCheckAutoTime.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        else{
+            MainActivity.taskCheckAutoTime.setListener(new SyncIsAutoTime() {
+                @Override
+                public void checkingAutoTime(Boolean isAuto) {
+                    checkAutoTime();
+                }
+            });
+        }
+
 
         /**
          * Initialise Time Life
@@ -102,19 +129,8 @@ public class MainActivity extends FragmentActivity {
 
         taskRefresh = new RefreshLifeUser(user, dateLastLife, getContentResolver(), new SyncTimeLife() {
             @Override
-            public void onTaskCompleted(User u, boolean isAuto) {
+            public void onTaskCompleted(User u) {
                 timeLife.setText(refreshLife(u));
-
-                if(isAuto){
-                    popinTime.setVisibility(View.GONE);
-                    timeLife.setVisibility(View.VISIBLE);
-                    nbrLife.setVisibility(View.VISIBLE);
-                }
-                else{
-                    popinTime.setVisibility(View.VISIBLE);
-                    timeLife.setVisibility(View.GONE);
-                    nbrLife.setVisibility(View.GONE);
-                }
             }
         });
 
@@ -279,6 +295,10 @@ public class MainActivity extends FragmentActivity {
             }
 
             long minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - user.getTimeLastLife()/1000/60);
+            if(minutesRestantes < 0){
+                minutesRestantes = 0;
+            }
+
             int secondStart = 60;
 
             if(seconds%60 == 0){
@@ -289,6 +309,10 @@ public class MainActivity extends FragmentActivity {
 
             if(secondesRestantes%60 == 0){
                 minutesRestantes += 1;
+            }
+
+            if(secondesRestantes < 0){
+                secondesRestantes = 0;
             }
 
             if(taskRefresh.getStatus() == AsyncTask.Status.RUNNING){
@@ -312,8 +336,6 @@ public class MainActivity extends FragmentActivity {
             long diff = dateActu.getTimeInMillis() - Long.valueOf(dao.getTimeLastLife());
             long seconds = diff / 1000;
             long minutes = seconds / 60;
-
-            Log.i("MAIN ACTIVITY", "Date actu : " + dateActu.getTimeInMillis() + " Date Last : " + dao.getTimeLastLife());
 
             long minutesRestantes;
             long secondesRestantes;
@@ -352,7 +374,9 @@ public class MainActivity extends FragmentActivity {
                 }
 
                 minutesRestantes = minutes%Constance.TIME_BETWEEN_LIFE;
-
+                if(minutesRestantes < 0){
+                    minutesRestantes = 0;
+                }
                 secondStart = 60;
 
                 if (seconds % 60 == 0) {
@@ -363,6 +387,10 @@ public class MainActivity extends FragmentActivity {
 
                 if (secondesRestantes % 60 == 0) {
                     minutesRestantes += 1;
+                }
+
+                if(secondesRestantes < 0){
+                    secondesRestantes = 0;
                 }
 
                 dateLastLife = dateActu;
@@ -375,6 +403,9 @@ public class MainActivity extends FragmentActivity {
             }
             else{
                 minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - diff / 1000 / 60);
+                if(minutesRestantes < 0){
+                    minutesRestantes = 0;
+                }
                 secondStart = 60;
 
                 if (seconds % 60 == 0) {
@@ -385,6 +416,10 @@ public class MainActivity extends FragmentActivity {
 
                 if (secondesRestantes % 60 == 0) {
                     minutesRestantes += 1;
+                }
+
+                if(secondesRestantes < 0){
+                    secondesRestantes = 0;
                 }
             }
             result = "" + minutesRestantes + ":" + Constance.addZero(String.valueOf(secondesRestantes));
@@ -403,7 +438,6 @@ public class MainActivity extends FragmentActivity {
     public void checkAutoTime(){
         if(android.provider.Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AUTO_TIME, 0) == 1){
             // Enabled
-            dateActu.setTimeInMillis(System.currentTimeMillis());
             popinTime.setVisibility(View.GONE);
             timeLife.setVisibility(View.VISIBLE);
             nbrLife.setVisibility(View.VISIBLE);

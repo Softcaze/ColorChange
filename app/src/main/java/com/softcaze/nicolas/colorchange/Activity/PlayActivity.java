@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.softcaze.nicolas.colorchange.AsyncTask.RefreshLifeUser;
 import com.softcaze.nicolas.colorchange.Database.DAO;
+import com.softcaze.nicolas.colorchange.Interface.SyncIsAutoTime;
 import com.softcaze.nicolas.colorchange.Interface.SyncTimeLife;
 import com.softcaze.nicolas.colorchange.Model.Constance;
 import com.softcaze.nicolas.colorchange.Model.User;
@@ -71,7 +72,12 @@ public class PlayActivity extends Activity {
 
         initView();
 
-        checkAutoTime();
+        MainActivity.taskCheckAutoTime.setListener(new SyncIsAutoTime() {
+            @Override
+            public void checkingAutoTime(Boolean isAuto) {
+                checkAutoTime();
+            }
+        });
 
         /**
          * Initialise Time Life
@@ -327,19 +333,8 @@ public class PlayActivity extends Activity {
 
         taskRefresh = new RefreshLifeUser(user, dateLastLife, getContentResolver(), new SyncTimeLife() {
             @Override
-            public void onTaskCompleted(User u, boolean isAuto) {
+            public void onTaskCompleted(User u) {
                 timeLife.setText(refreshLife(u));
-
-                if(isAuto){
-                    popinTime.setVisibility(View.GONE);
-                    timeLife.setVisibility(View.VISIBLE);
-                    nbrLife.setVisibility(View.VISIBLE);
-                }
-                else{
-                    popinTime.setVisibility(View.VISIBLE);
-                    timeLife.setVisibility(View.GONE);
-                    nbrLife.setVisibility(View.GONE);
-                }
             }
         });
 
@@ -557,6 +552,9 @@ public class PlayActivity extends Activity {
             }
 
             long minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - user.getTimeLastLife()/1000/60);
+            if(minutesRestantes < 0){
+                minutesRestantes = 0;
+            }
             int secondStart = 60;
 
             if(seconds%60 == 0){
@@ -567,6 +565,10 @@ public class PlayActivity extends Activity {
 
             if(secondesRestantes%60 == 0){
                 minutesRestantes += 1;
+            }
+
+            if(secondesRestantes < 0){
+                secondesRestantes = 0;
             }
 
             if(taskRefresh.getStatus() == AsyncTask.Status.RUNNING){
@@ -628,6 +630,9 @@ public class PlayActivity extends Activity {
                 }
 
                 minutesRestantes = minutes%Constance.TIME_BETWEEN_LIFE;
+                if(minutesRestantes < 0){
+                    minutesRestantes = 0;
+                }
 
                 secondStart = 60;
 
@@ -639,6 +644,10 @@ public class PlayActivity extends Activity {
 
                 if (secondesRestantes % 60 == 0) {
                     minutesRestantes += 1;
+                }
+
+                if(secondesRestantes < 0){
+                    secondesRestantes = 0;
                 }
 
                 dateLastLife = dateActu;
@@ -650,6 +659,9 @@ public class PlayActivity extends Activity {
             }
             else{
                 minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - diff / 1000 / 60);
+                if(minutesRestantes < 0){
+                    minutesRestantes = 0;
+                }
                 secondStart = 60;
 
                 if (seconds % 60 == 0) {
@@ -660,6 +672,10 @@ public class PlayActivity extends Activity {
 
                 if (secondesRestantes % 60 == 0) {
                     minutesRestantes += 1;
+                }
+
+                if(secondesRestantes < 0){
+                    secondesRestantes = 0;
                 }
             }
             result = "" + minutesRestantes + ":" + Constance.addZero(String.valueOf(secondesRestantes));
@@ -680,7 +696,6 @@ public class PlayActivity extends Activity {
     public void checkAutoTime(){
         if(android.provider.Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AUTO_TIME, 0) == 1){
             // Enabled
-            dateActu.setTimeInMillis(System.currentTimeMillis());
             popinTime.setVisibility(View.GONE);
             timeLife.setVisibility(View.VISIBLE);
             nbrLife.setVisibility(View.VISIBLE);

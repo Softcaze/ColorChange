@@ -14,10 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.softcaze.nicolas.colorchange.Adapter.ListLevelAdapter;
+import com.softcaze.nicolas.colorchange.AsyncTask.CheckAutoTime;
 import com.softcaze.nicolas.colorchange.AsyncTask.RefreshLifeUser;
 import com.softcaze.nicolas.colorchange.Database.DAO;
+import com.softcaze.nicolas.colorchange.Interface.SyncIsAutoTime;
 import com.softcaze.nicolas.colorchange.Interface.SyncTimeLife;
 import com.softcaze.nicolas.colorchange.Model.Constance;
+import com.softcaze.nicolas.colorchange.Model.Popup;
 import com.softcaze.nicolas.colorchange.Model.User;
 import com.softcaze.nicolas.colorchange.Model.World;
 import com.softcaze.nicolas.colorchange.R;
@@ -36,12 +39,15 @@ public class ListLevelActivity extends Activity {
     World myWorld;
     List<World> listWorld = new ArrayList<World>();
 
-    TextView txt_monde_1, nbr_star, nbrLife, timeLife, btn_popin;
+    TextView txt_monde_1, nbr_star, nbrLife, timeLife, btn_popin, btn1_popin_no_life, btn2_popin_no_life;
     ImageView img_monde, left_arrow, right_arrow, heart;
 
     ListLevelAdapter adapter;
     ListView listViewLevel;
-    RelativeLayout popinTime;
+    RelativeLayout popinTime, popinNoLife;
+
+    SyncIsAutoTime syncAutoTime;
+    CheckAutoTime taskCheckAutoTime;
 
     DAO dao = null;
 
@@ -68,6 +74,13 @@ public class ListLevelActivity extends Activity {
         myWorld = (World) getIntent().getSerializableExtra("worldClicked");
         listWorld = (List<World>) getIntent().getSerializableExtra("listWorld");
         user = (User) getIntent().getSerializableExtra("user");
+
+        MainActivity.taskCheckAutoTime.setListener(new SyncIsAutoTime() {
+            @Override
+            public void checkingAutoTime(Boolean isAuto) {
+                checkAutoTime();
+            }
+        });
 
 
         /**
@@ -97,19 +110,8 @@ public class ListLevelActivity extends Activity {
 
         taskRefresh = new RefreshLifeUser(user, dateLastLife, getContentResolver(), new SyncTimeLife() {
             @Override
-            public void onTaskCompleted(User u, boolean isAuto) {
+            public void onTaskCompleted(User u) {
                 timeLife.setText(refreshLife(u));
-
-                if(isAuto){
-                    popinTime.setVisibility(View.GONE);
-                    timeLife.setVisibility(View.VISIBLE);
-                    nbrLife.setVisibility(View.VISIBLE);
-                }
-                else{
-                    popinTime.setVisibility(View.VISIBLE);
-                    timeLife.setVisibility(View.GONE);
-                    nbrLife.setVisibility(View.GONE);
-                }
             }
         });
 
@@ -117,6 +119,23 @@ public class ListLevelActivity extends Activity {
             @Override
             public void onClick(View view) {
                 checkAutoTime();
+            }
+        });
+
+        btn1_popin_no_life.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ListLevelActivity.this, ShopActivity.class);
+                startActivity(intent);
+
+                taskRefresh.cancel(true);
+            }
+        });
+
+        btn2_popin_no_life.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popinNoLife.setVisibility(View.GONE);
             }
         });
 
@@ -201,7 +220,7 @@ public class ListLevelActivity extends Activity {
                         intent.putExtras(b);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(getApplicationContext(), "Plus de vie", Toast.LENGTH_LONG).show();
+                        popinNoLife.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -271,8 +290,11 @@ public class ListLevelActivity extends Activity {
 
     public void initView(){
         popinTime = (RelativeLayout) findViewById(R.id.popinTime);
+        popinNoLife = (RelativeLayout) findViewById(R.id.popinNoLife);
         txt_monde_1 = (TextView) findViewById(R.id.txt_monde_1);
         btn_popin = (TextView) findViewById(R.id.btn_popin);
+        btn1_popin_no_life = (TextView) findViewById(R.id.btn1_popin_no_life);
+        btn2_popin_no_life = (TextView) findViewById(R.id.btn2_popin_no_life);
         nbrLife = (TextView) findViewById(R.id.nbrLife);
         timeLife = (TextView) findViewById(R.id.timeLife);
         nbr_star = (TextView) findViewById(R.id.nbr_star);
@@ -467,6 +489,9 @@ public class ListLevelActivity extends Activity {
                 }
 
                 minutesRestantes = minutes - (nbrLifeAdded * Constance.TIME_BETWEEN_LIFE);
+                if(minutesRestantes < 0){
+                    minutesRestantes = 0;
+                }
 
                 secondStart = 60;
 
@@ -478,6 +503,10 @@ public class ListLevelActivity extends Activity {
 
                 if (secondesRestantes % 60 == 0) {
                     minutesRestantes += 1;
+                }
+
+                if(secondesRestantes < 0){
+                    secondesRestantes = 0;
                 }
 
                 dateLastLife = dateActu;
@@ -489,6 +518,9 @@ public class ListLevelActivity extends Activity {
             }
             else{
                 minutesRestantes = (Constance.TIME_BETWEEN_LIFE - 1 - diff / 1000 / 60);
+                if(minutesRestantes < 0){
+                    minutesRestantes = 0;
+                }
                 secondStart = 60;
 
                 if (seconds % 60 == 0) {
@@ -499,6 +531,10 @@ public class ListLevelActivity extends Activity {
 
                 if (secondesRestantes % 60 == 0) {
                     minutesRestantes += 1;
+                }
+
+                if(secondesRestantes < 0){
+                    secondesRestantes = 0;
                 }
             }
             result = "" + minutesRestantes + ":" + Constance.addZero(String.valueOf(secondesRestantes));
@@ -519,7 +555,6 @@ public class ListLevelActivity extends Activity {
     public void checkAutoTime(){
         if(android.provider.Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AUTO_TIME, 0) == 1){
             // Enabled
-            dateActu.setTimeInMillis(System.currentTimeMillis());
             popinTime.setVisibility(View.GONE);
             timeLife.setVisibility(View.VISIBLE);
             nbrLife.setVisibility(View.VISIBLE);

@@ -180,4 +180,83 @@
         </RelativeLayout>
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/popinNoLife"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/transparent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="50dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/title_popin_no_life"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_popin_no_life"
+                android:textColor="@color/grey_2"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:paddingTop="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="20dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/heart"
+                android:paddingTop="20dp"
+                android:layout_toRightOf="@id/title_popin_no_life"/>
+
+            <TextView
+                android:id="@+id/content_popin_no_life"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/light_grey"
+                android:layout_below="@id/title_popin_no_life"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:textSize="18dp"
+                android:text="@string/content_popin_no_life"/>
+            <TextView
+                android:id="@+id/btn2_popin_no_life"
+                android:layout_below="@id/content_popin_no_life"
+                android:layout_alignParentRight="true"
+                android:text="@string/btn2_popin_no_life"
+                android:textSize="18sp"
+                android:padding="20dp"
+                android:textColor="@color/blue_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/btn1_popin_no_life"
+                android:layout_below="@id/content_popin_no_life"
+                android:layout_toLeftOf="@id/btn2_popin_no_life"
+                android:text="@string/btn1_popin_no_life"
+                android:textSize="18sp"
+                android:paddingTop="20dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="5dp"
+                android:textColor="@color/blue_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="24dp"
+                android:layout_toLeftOf="@id/btn1_popin_no_life"
+                android:layout_below="@id/content_popin_no_life"
+                android:src="@drawable/shopping_cart_blue"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
 </RelativeLayout>
