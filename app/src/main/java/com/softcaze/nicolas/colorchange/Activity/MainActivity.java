@@ -2,6 +2,7 @@ package com.softcaze.nicolas.colorchange.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.softcaze.nicolas.colorchange.Database.DAO;
 import com.softcaze.nicolas.colorchange.Interface.SyncIsAutoTime;
 import com.softcaze.nicolas.colorchange.Interface.SyncTimeLife;
 import com.softcaze.nicolas.colorchange.Model.Constance;
+import com.softcaze.nicolas.colorchange.Model.Sounds;
 import com.softcaze.nicolas.colorchange.Model.User;
 import com.softcaze.nicolas.colorchange.R;
 
@@ -48,6 +50,7 @@ public class MainActivity extends FragmentActivity {
     protected RelativeLayout popinTime, containerPopin;
     protected LinearLayout mainLinear;
     protected static CheckAutoTime taskCheckAutoTime;
+    protected MediaPlayer clickBtn;
 
 
     @Override
@@ -72,11 +75,16 @@ public class MainActivity extends FragmentActivity {
         img_play = (ImageView) findViewById(R.id.img_play);
         heart = (ImageView) findViewById(R.id.heart);
 
-        Log.i("Main activity", "On create");
-
         dao = new DAO(this);
+        clickBtn = MediaPlayer.create(getApplicationContext(), R.raw.click_btn);
 
         format = new SimpleDateFormat("mm:ss");
+
+        dao.open();
+        if(dao.getStateSound() == -1){
+            dao.setStateSound(Constance.SOUND_ENABLE);
+        }
+        dao.close();
 
         user = new User();
 
@@ -170,6 +178,8 @@ public class MainActivity extends FragmentActivity {
                         Log.i("CLICK ON PLAY", "Impossible d'arreter aynsctask refresh life");
                     }
 
+                    playSounds(clickBtn);
+
                     Intent intent = new Intent(MainActivity.this, PlayActivity.class);
 
                     Bundle bundle = new Bundle();
@@ -199,6 +209,8 @@ public class MainActivity extends FragmentActivity {
                     }
                     dao.close();
 
+                    playSounds(clickBtn);
+
                     Intent intent = new Intent(MainActivity.this, ShopActivity.class);
                     startActivity(intent);
                 }
@@ -214,6 +226,8 @@ public class MainActivity extends FragmentActivity {
                 if(popinTime.getVisibility() != View.VISIBLE) {
                     Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(intent);
+
+                    playSounds(clickBtn);
                 }
             }
         });
@@ -225,7 +239,7 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 if(popinTime.getVisibility() != View.VISIBLE){
-
+                    playSounds(clickBtn);
                 }
             }
         });
@@ -447,6 +461,22 @@ public class MainActivity extends FragmentActivity {
             popinTime.setVisibility(View.VISIBLE);
             timeLife.setVisibility(View.GONE);
             nbrLife.setVisibility(View.GONE);
+        }
+    }
+
+    public void playSounds(MediaPlayer md){
+        try{
+            dao.open();
+
+            if(dao.getStateSound() == Constance.SOUND_ENABLE){
+                md.setVolume(1.0f, 1.0f);
+                md.start();
+            }
+
+            dao.close();
+        }
+        catch (Exception e){
+            Log.i("List Level Activity", "Sounds play : " + e);
         }
     }
 }

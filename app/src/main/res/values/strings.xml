@@ -61,4 +61,5 @@
     <string name="content_popin_no_life">Wait to get new lifes or go on shop to buy.</string>
     <string name="btn1_popin_no_life">SHOP</string>
     <string name="btn2_popin_no_life">OK</string>
+    <string name="setting_langue1">EN</string>
 </resources>

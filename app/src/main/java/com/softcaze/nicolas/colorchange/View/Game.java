@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -72,6 +73,9 @@ public class Game extends View {
     protected RewardedVideoAd mRewardedVideoAd;
 
     protected DAO dao = null;
+    protected MediaPlayer clickBtn;
+    protected MediaPlayer vehiculeOk;
+    protected MediaPlayer gameOver;
 
     protected World worldActu;
     protected int intDisparition = R.drawable.disparition;
@@ -126,6 +130,9 @@ public class Game extends View {
         dao = new DAO(context);
 
         btnPause = new Objet();
+        clickBtn = MediaPlayer.create(context, R.raw.click_btn);
+        vehiculeOk = MediaPlayer.create(context, R.raw.vehicule_ok);
+        gameOver = MediaPlayer.create(context, R.raw.game_over);
 
         Bitmap logoPause = Constance.getResizedBitmap(BitmapFactory.decodeResource(getResources(), intPause), LARGEUR_ECRAN / 13, 0);
         btnPause.setImg(logoPause);
@@ -290,8 +297,10 @@ public class Game extends View {
             // Si la porte sort de l'écran, on la supprime
             if (listVehicules.get(i).getY() + listVehicules.get(i).getImg().getHeight() / 3 > laneColor.getY()) {
                 if (laneColor.getColor() == listVehicules.get(i).getColor()) {
+                    playSounds(vehiculeOk);
                     score++;
                 } else {
+                    playSounds(gameOver);
                     // L'utilisateur perd une vie si il obtient 0 étoiles
                     if(score < levelActu.getScoreStar1()){
                         if(user.getNbrLife() > 0){
@@ -730,6 +739,7 @@ public class Game extends View {
     public boolean onTouchEvent(MotionEvent event) {
         if(etatGame.getEtat() == Constance.FIRST_USE){
             if(event.getAction() == MotionEvent.ACTION_DOWN){
+                playSounds(clickBtn);
                 switch(etatFirstUse){
                     case Constance.STEP_1:
                         if(listColorBtn.get(0) != null){
@@ -792,7 +802,7 @@ public class Game extends View {
 
         else if(etatGame.getEtat() == Constance.TUTORIEL) {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
-
+                playSounds(clickBtn);
                 firstUse = Constance.FALSE;
 
                 dao.open();
@@ -837,6 +847,7 @@ public class Game extends View {
                 //task.cancel(true);
                 for(int i = 0; i < listColorBtn.size(); i++){
                     if (listColorBtn.get(i).isClicked(event.getX(), event.getY())) {
+                        playSounds(clickBtn);
                         // Modifier la lane de couleur
                         laneColor.setColor(listColorBtn.get(i).getColor());
                         laneColor.setImg(doorColorMap.get(listColorBtn.get(i).getColor()));
@@ -848,6 +859,7 @@ public class Game extends View {
             if(event.getAction() == MotionEvent.ACTION_UP){
                 // Si l'utilisateur clique sur 'Revive'
                 if(event.getX() >= btnXRevive && event.getX() <= btnXRevive + btnWidth && event.getY() >= btnYRevive && event.getY() <= btnYRevive + btnHeight){
+                    playSounds(clickBtn);
                     if(etatGame.hasRevive()){
                         // Lancer la pub vidéo
                         if (mRewardedVideoAd.isLoaded()) {
@@ -865,6 +877,7 @@ public class Game extends View {
 
                 // Si l'utilisateur clique sur 'Again'
                 if(event.getX() >= btnXAgain && event.getX() <= btnXAgain + btnWidth && event.getY() >= btnYAgain && event.getY() <= btnYAgain + btnHeight){
+                    playSounds(clickBtn);
                     if(user.getNbrLife() > 0) {
                         etatGame.setHasRevive(true);
                         etatGame.setEtat(Constance.TUTORIEL);
@@ -898,6 +911,7 @@ public class Game extends View {
 
                 // Si l'utilisateur clique sur 'Menu'
                 if(event.getX() >= btnXMenu && event.getX() <= btnXMenu + btnMenuWidth && event.getY() >= btnYMenu && event.getY() <= btnYMenu + btnHeight){
+                    playSounds(clickBtn);
                     Bundle b = new Bundle();
 
                     // On re check en base le nbr de vie, il est possible que l'user en est gagné une en regardant une video de récompense
@@ -919,6 +933,7 @@ public class Game extends View {
 
                 // Si l'utilisateur clique sur 'Next'
                 if(event.getX() >= btnXNext && event.getX() <= btnXNext + btnNextWidth && event.getY() >= btnYNext && event.getY() <= btnYNext + btnHeight){
+                    playSounds(clickBtn);
                     if(user.getNbrLife() > 0) {
                         if (levelActu.getNum() != worldActu.getlevels().size()) {
                             Bundle b = new Bundle();
@@ -942,6 +957,7 @@ public class Game extends View {
         }
         else if(etatGame.getEtat() == Constance.POPUP_OPEN){
             if(event.getAction() == MotionEvent.ACTION_UP) {
+                playSounds(clickBtn);
                 // Button SHOP - Popup
                 if (popup.getBtn1().isClicked(event.getX(), event.getY(), getContext())) {
                     Intent intent = new Intent(getContext(), ShopActivity.class);
@@ -1139,5 +1155,22 @@ public class Game extends View {
 
         vehicTuto = new Vehicule(Constance.getResizedBitmap(vehiculeColorMap.get(listColorBtn.get(1).getColor()), LARGEUR_ECRAN / nbrColumn, 0), HAUTEUR_ECRAN / 15, LARGEUR_ECRAN, listColorBtn.get(0).getColor());
         vehicTuto.setX(LARGEUR_ECRAN - LARGEUR_ECRAN/3);
+    }
+
+    public void playSounds(MediaPlayer md){
+        try{
+            dao.open();
+
+            if(dao.getStateSound() == Constance.SOUND_ENABLE){
+                md.setVolume(1.0f, 1.0f);
+                md.start();
+            }
+
+
+            dao.close();
+        }
+        catch (Exception e){
+            Log.i("List Level Activity", "Sounds play : " + e);
+        }
     }
 }

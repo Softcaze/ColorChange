@@ -2,6 +2,7 @@ package com.softcaze.nicolas.colorchange.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.softcaze.nicolas.colorchange.Database.DAO;
 import com.softcaze.nicolas.colorchange.Interface.SyncIsAutoTime;
 import com.softcaze.nicolas.colorchange.Interface.SyncTimeLife;
 import com.softcaze.nicolas.colorchange.Model.Constance;
+import com.softcaze.nicolas.colorchange.Model.Sounds;
 import com.softcaze.nicolas.colorchange.Model.User;
 import com.softcaze.nicolas.colorchange.Model.World;
 import com.softcaze.nicolas.colorchange.R;
@@ -47,6 +49,7 @@ public class PlayActivity extends Activity {
     protected SimpleDateFormat format;
     protected Calendar dateLastLife = Calendar.getInstance();
     protected RelativeLayout popinTime;
+    protected MediaPlayer clickBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,8 @@ public class PlayActivity extends Activity {
 
         dao = new DAO(this);
         user = (User) getIntent().getSerializableExtra("user");
+
+        clickBtn = MediaPlayer.create(getApplicationContext(), R.raw.click_btn);
 
         format = new SimpleDateFormat("mm:ss");
 
@@ -106,6 +111,7 @@ public class PlayActivity extends Activity {
                     container_play.setBackgroundColor(getResources().getColor(R.color.red));
                     tab_1_container.setVisibility(View.VISIBLE);
                     tab_2_container.setVisibility(View.GONE);
+                    playSounds(clickBtn);
                 }
             }
         });
@@ -120,6 +126,7 @@ public class PlayActivity extends Activity {
                     container_play.setBackgroundColor(getResources().getColor(R.color.dark_grey));
                     tab_1_container.setVisibility(View.GONE);
                     tab_2_container.setVisibility(View.VISIBLE);
+                    playSounds(clickBtn);
                 }
             }
         });
@@ -144,6 +151,8 @@ public class PlayActivity extends Activity {
                         } catch (Exception e) {
                             Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
                         }
+
+                        playSounds(clickBtn);
 
                         Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
 
@@ -174,6 +183,8 @@ public class PlayActivity extends Activity {
                             Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
                         }
 
+                        playSounds(clickBtn);
+
                         Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
 
                         Bundle b = new Bundle();
@@ -202,6 +213,8 @@ public class PlayActivity extends Activity {
                         } catch (Exception e) {
                             Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
                         }
+
+                        playSounds(clickBtn);
 
                         Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
 
@@ -232,6 +245,8 @@ public class PlayActivity extends Activity {
                         } catch (Exception e) {
                             Log.i("PLAY ACTIVITY", "Impossible d'arreter aynsctask refresh life");
                         }
+
+                        playSounds(clickBtn);
 
                         Intent intent = new Intent(PlayActivity.this, ListLevelActivity.class);
 
@@ -705,6 +720,22 @@ public class PlayActivity extends Activity {
             popinTime.setVisibility(View.VISIBLE);
             timeLife.setVisibility(View.GONE);
             nbrLife.setVisibility(View.GONE);
+        }
+    }
+
+    public void playSounds(MediaPlayer md){
+        try{
+            dao.open();
+
+            if(dao.getStateSound() == Constance.SOUND_ENABLE){
+                md.setVolume(1.0f, 1.0f);
+                md.start();
+            }
+
+            dao.close();
+        }
+        catch (Exception e){
+            Log.i("List Level Activity", "Sounds play : " + e);
         }
     }
 }

@@ -46,6 +46,14 @@ public class Constance {
     public static final int LIST_LEVEL = 3;
     public static final int GAME = 4;
 
+    // Sounds
+    public static final int CLICK_BTN_1 = 1;
+    public static final int VEHICULE_OK_1 = 2;
+
+    // ENABLE SOUND
+    public static final int SOUND_ENABLE = 1;
+    public static final int SOUND_DISABLE = 2;
+
     // First Utilisation
     public static final int TRUE = 1;
     public static final int FALSE = 2;

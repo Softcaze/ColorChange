@@ -66,6 +66,7 @@
                 android:layout_toRightOf="@id/heart_1"/>
 
             <RelativeLayout
+                android:soundEffectsEnabled="false"
                 android:layout_width="120dp"
                 android:background="@drawable/rounded_white_green_hard"
                 android:layout_alignParentRight="true"
@@ -125,9 +126,11 @@
                 android:layout_width="75dp"
                 android:background="@drawable/rounded_white_dark_grey_hard"
                 android:layout_alignParentRight="true"
+                android:soundEffectsEnabled="false"
                 android:layout_height="45dp">
 
                 <TextView
+                    android:id="@+id/price5Life"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -165,16 +168,18 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"
-                android:text="x5"
+                android:text="x10"
                 android:layout_toRightOf="@id/heart_3"/>
 
             <RelativeLayout
                 android:layout_width="75dp"
+                android:soundEffectsEnabled="false"
                 android:background="@drawable/rounded_white_dark_grey_hard"
                 android:layout_alignParentRight="true"
                 android:layout_height="45dp">
 
                 <TextView
+                    android:id="@+id/price10Life"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -217,11 +222,13 @@
 
             <RelativeLayout
                 android:layout_width="75dp"
+                android:soundEffectsEnabled="false"
                 android:background="@drawable/rounded_white_dark_grey_hard"
                 android:layout_alignParentRight="true"
                 android:layout_height="45dp">
 
                 <TextView
+                    android:id="@+id/price25Life"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -264,11 +271,13 @@
 
             <RelativeLayout
                 android:layout_width="75dp"
+                android:soundEffectsEnabled="false"
                 android:background="@drawable/rounded_white_dark_grey_hard"
                 android:layout_alignParentRight="true"
                 android:layout_height="45dp">
 
                 <TextView
+                    android:id="@+id/price50Life"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"

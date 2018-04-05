@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 public class DAO {
-    public static int VERSION = 58;
+    public static int VERSION = 67;
     public static String NOM_DB = "colorchangedatabase.db";
 
     public static final String NOM_TABLE_USER = "user";
@@ -30,6 +30,10 @@ public class DAO {
     public static final int NUM_COL_FIRST_UTILISATION = 2;
     public static final String COL_TIME_LAST_LIFE = "time_last_life";
     public static final int NUM_COL_TIME_LAST_LIFE = 3;
+
+    public static final String NOM_TABLE_SOUND = "sound";
+    public static final String COL_ENABLE_SOUND = "enable_sound";
+    public static final int NUM_COL_ENABLE_SOUND = 0;
 
     public static final String NOM_TABLE_LEVEL = "level";
     public static final String COL_ID_LEVEL = "id_level";
@@ -272,7 +276,6 @@ public class DAO {
     }
 
     public void setFirstUtilisation(int use){
-        Log.i("SET FIRST USE", " USE : " + use);
         Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_USER, null);
         ContentValues values = new ContentValues();
         values.put(COL_FIRST_UTILISATION, use);
@@ -293,5 +296,40 @@ public class DAO {
                 Log.i("SET FIRST USE UPDATE", "Exception : " + e);
             }
         }
+    }
+
+    public void setStateSound(int state){
+        Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_SOUND, null);
+        ContentValues values = new ContentValues();
+        values.put(COL_ENABLE_SOUND, state);
+
+        if(c.getCount() == 0){
+            try{
+                database.insert(NOM_TABLE_SOUND, null, values);
+            }
+            catch(Exception e){
+                Log.i("SET STATE SOUND INSERT", "Exception : " + e);
+            }
+        }
+        else{
+            try{
+                database.update(NOM_TABLE_SOUND, values, null, null);
+            }
+            catch(Exception e){
+                Log.i("SET STATE SOUND UPDATE", "Exception : " + e);
+            }
+        }
+    }
+
+    public int getStateSound(){
+        Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_SOUND, null);
+
+        if(c.getCount() != 0){
+            c.moveToFirst();
+
+            return c.getInt(NUM_COL_ENABLE_SOUND);
+        }
+
+        return -1;
     }
 }

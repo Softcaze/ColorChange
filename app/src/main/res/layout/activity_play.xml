@@ -59,6 +59,7 @@
             android:text="Monde"
             android:textColor="@color/white"
             android:textSize="26dp"
+            android:soundEffectsEnabled="false"
             android:gravity="center"
             android:background="@drawable/tab_rounded_clicked"
             android:padding="10dp"
@@ -76,6 +77,7 @@
             android:text="Vitesse"
             android:textColor="@color/white"
             android:textSize="26dp"
+            android:soundEffectsEnabled="false"
             android:gravity="center"
             android:padding="10dp"
             android:background="@drawable/tab_rounded_unclicked"
@@ -117,6 +119,7 @@
                         android:layout_weight="1">
 
                         <RelativeLayout
+                            android:soundEffectsEnabled="false"
                             android:id="@+id/container_monde_1"
                             android:layout_width="200dp"
                             android:layout_height="80dp"
@@ -322,6 +325,7 @@
 
                         <RelativeLayout
                             android:id="@+id/container_monde_2"
+                            android:soundEffectsEnabled="false"
                             android:layout_width="200dp"
                             android:layout_height="80dp"
                             android:layout_centerHorizontal="true"
@@ -496,6 +500,7 @@
                         <RelativeLayout
                             android:id="@+id/container_monde_3"
                             android:layout_width="200dp"
+                            android:soundEffectsEnabled="false"
                             android:layout_height="80dp"
                             android:layout_centerHorizontal="true"
                             android:background="@drawable/rounded_white">
@@ -698,6 +703,7 @@
                         <RelativeLayout
                             android:id="@+id/container_monde_4"
                             android:layout_width="200dp"
+                            android:soundEffectsEnabled="false"
                             android:layout_height="80dp"
                             android:layout_centerHorizontal="true"
                             android:background="@drawable/rounded_white">

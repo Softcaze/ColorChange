@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:soundEffectsEnabled="false"
         android:id="@+id/relative_list_view"
         android:padding="10dp"
         android:layout_width="wrap_content"

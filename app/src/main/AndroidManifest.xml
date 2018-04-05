@@ -51,7 +51,8 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent" />
         <activity android:name=".Activity.SettingsActivity" />
-        <activity android:name=".Activity.ShopActivity"></activity>
+        <activity android:name=".Activity.ShopActivity" />
+        <activity android:name=".Activity.ContactFormActivity"></activity>
     </application>
 
 </manifest>

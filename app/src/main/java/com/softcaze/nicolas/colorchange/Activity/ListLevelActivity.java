@@ -2,6 +2,7 @@ package com.softcaze.nicolas.colorchange.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.softcaze.nicolas.colorchange.Interface.SyncIsAutoTime;
 import com.softcaze.nicolas.colorchange.Interface.SyncTimeLife;
 import com.softcaze.nicolas.colorchange.Model.Constance;
 import com.softcaze.nicolas.colorchange.Model.Popup;
+import com.softcaze.nicolas.colorchange.Model.Sounds;
 import com.softcaze.nicolas.colorchange.Model.User;
 import com.softcaze.nicolas.colorchange.Model.World;
 import com.softcaze.nicolas.colorchange.R;
@@ -41,10 +43,12 @@ public class ListLevelActivity extends Activity {
 
     TextView txt_monde_1, nbr_star, nbrLife, timeLife, btn_popin, btn1_popin_no_life, btn2_popin_no_life;
     ImageView img_monde, left_arrow, right_arrow, heart;
+    Sounds sounds;
 
     ListLevelAdapter adapter;
     ListView listViewLevel;
     RelativeLayout popinTime, popinNoLife;
+    protected MediaPlayer clickBtn;
 
     SyncIsAutoTime syncAutoTime;
     CheckAutoTime taskCheckAutoTime;
@@ -65,6 +69,8 @@ public class ListLevelActivity extends Activity {
         setContentView(R.layout.activity_list_level);
 
         dao = new DAO(this);
+
+        clickBtn = MediaPlayer.create(getApplicationContext(), R.raw.click_btn);
 
         format = new SimpleDateFormat("mm:ss");
 
@@ -125,16 +131,19 @@ public class ListLevelActivity extends Activity {
         btn1_popin_no_life.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                taskRefresh.cancel(true);
+
+                playSounds(clickBtn);
+
                 Intent intent = new Intent(ListLevelActivity.this, ShopActivity.class);
                 startActivity(intent);
-
-                taskRefresh.cancel(true);
             }
         });
 
         btn2_popin_no_life.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                playSounds(clickBtn);
                 popinNoLife.setVisibility(View.GONE);
             }
         });
@@ -164,6 +173,8 @@ public class ListLevelActivity extends Activity {
 
                     loadDataBDD();
 
+                    playSounds(clickBtn);
+
                     txt_monde_1.setText(myWorld.getName());
                     nbr_star.setText(String.valueOf(myWorld.getNumberStars()));
                     img_monde.setImageResource(myWorld.getImg());
@@ -186,6 +197,8 @@ public class ListLevelActivity extends Activity {
 
                     loadDataBDD();
 
+                    playSounds(clickBtn);
+
                     txt_monde_1.setText(myWorld.getName());
                     nbr_star.setText(String.valueOf(myWorld.getNumberStars()));
                     img_monde.setImageResource(myWorld.getImg());
@@ -207,6 +220,8 @@ public class ListLevelActivity extends Activity {
                         } catch (Exception e) {
                             Log.i("LIST LEVEL", "Impossible d'arreter aynsctask refresh life");
                         }
+
+                        playSounds(clickBtn);
 
                         Intent intent = new Intent(ListLevelActivity.this, TransitionActivityView.class);
 
@@ -564,6 +579,22 @@ public class ListLevelActivity extends Activity {
             popinTime.setVisibility(View.VISIBLE);
             timeLife.setVisibility(View.GONE);
             nbrLife.setVisibility(View.GONE);
+        }
+    }
+
+    public void playSounds(MediaPlayer md){
+        try{
+            dao.open();
+
+            if(dao.getStateSound() == Constance.SOUND_ENABLE){
+                md.setVolume(1.0f, 1.0f);
+                md.start();
+            }
+
+            dao.close();
+        }
+        catch (Exception e){
+            Log.i("List Level Activity", "Sounds play : " + e);
         }
     }
 }

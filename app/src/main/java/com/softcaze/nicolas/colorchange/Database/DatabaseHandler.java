@@ -19,6 +19,10 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public static final String COL_TIME_LAST_LIFE = "time_last_life";
     public static final int NUM_COL_TIME_LAST_LIFE = 3;
 
+    public static final String NOM_TABLE_SOUND = "sound";
+    public static final String COL_ENABLE_SOUND = "enable_sound";
+    public static final int NUM_COL_ENABLE_SOUND = 0;
+
     public static final String NOM_TABLE_LEVEL = "level";
     public static final String COL_ID_LEVEL = "id_level";
     public static final int NUM_COL_ID_LEVEL = 0;
@@ -40,6 +44,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             COL_NBR_LIFE + " INTEGER, " + COL_FIRST_UTILISATION + " INTEGER, " +
             COL_TIME_LAST_LIFE + " TEXT);";
 
+    public static final String CREATE_TABLE_SOUND = "CREATE TABLE IF NOT EXISTS " + NOM_TABLE_SOUND + " (" +
+            COL_ENABLE_SOUND + " INTEGER PRIMARY KEY);";
+
     public static final String CREATE_TABLE_LEVEL = "CREATE TABLE IF NOT EXISTS " + NOM_TABLE_LEVEL + " (" +
             COL_ID_LEVEL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COL_NUM + " INTEGER, " + COL_ID_WORLD_LEVEL + " INTEGER, " + COL_SCORE + " INTEGER);";
@@ -49,6 +56,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
             COL_NBR_STAR + " INTEGER);";
 
     public static final String DROP_TABLE_USER = "DROP TABLE IF EXISTS " + NOM_TABLE_USER + ";";
+    public static final String DROP_TABLE_SOUND = "DROP TABLE IF EXISTS " + NOM_TABLE_SOUND + ";";
     public static final String DROP_TABLE_LEVEL = "DROP TABLE IF EXISTS " + NOM_TABLE_LEVEL + ";";
     public static final String DROP_TABLE_WORLD = "DROP TABLE IF EXISTS " + NOM_TABLE_WORLD + ";";
 
@@ -60,6 +68,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_USER);
+        db.execSQL(CREATE_TABLE_SOUND);
         db.execSQL(CREATE_TABLE_LEVEL);
         db.execSQL(CREATE_TABLE_WORLD);
     }
@@ -67,6 +76,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL(DROP_TABLE_USER);
+        db.execSQL(DROP_TABLE_SOUND);
         db.execSQL(DROP_TABLE_LEVEL);
         db.execSQL(DROP_TABLE_WORLD);
         onCreate(db);
