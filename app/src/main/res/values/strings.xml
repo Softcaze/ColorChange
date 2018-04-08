@@ -31,14 +31,14 @@
     <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/5224354917</string>
     <string name="title_activity_fdfddfdf">fdfddfdf</string>
     <string name="libelle_score">Score</string>
-    <string name="tutoriel">Choose the good color</string>
+    <string name="tutoriel">Choose the right color</string>
     <string name="question_tutoriel_1">"Do you want "</string>
     <string name="question_tutoriel_2">start the tutoriel ?</string>
     <string name="answer_tuto_1">YES</string>
     <string name="answer_tuto_2">NO</string>
     <string name="answer_tuto_1_1">(Recommanded)</string>
     <string name="choose_color_tuto_1">Choose the</string>
-    <string name="choose_color_tuto_2">good color</string>
+    <string name="choose_color_tuto_2">right color</string>
     <string name="end_tuto_1">Great !</string>
     <string name="end_tuto_2">Are you ready ?</string>
     <string name="end_tuto_3">(Click to start level 1)</string>

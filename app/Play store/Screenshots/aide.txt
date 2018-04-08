@@ -1,0 +1,5 @@
+image: 350*625
+texte: 
+	color: #434343
+	taille: 16px
+	font: roboto regular

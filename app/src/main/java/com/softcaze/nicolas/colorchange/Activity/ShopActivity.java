@@ -127,7 +127,19 @@ public class ShopActivity extends AppCompatActivity {
                 return;
             }
             else if (purchase.getSku().equals(ITEM_5_LIFE)) {
-                Log.i(TAG, "Purchase ITEM");
+                Log.i(TAG, "Purchase ITEM : " + ITEM_5_LIFE);
+                consumeItem();
+            }
+            else if(purchase.getSku().equals(ITEM_10_LIFE)){
+                Log.i(TAG, "Purchase ITEM : " + ITEM_10_LIFE);
+                consumeItem();
+            }
+            else if(purchase.getSku().equals(ITEM_25_LIFE)){
+                Log.i(TAG, "Purchase ITEM : " + ITEM_25_LIFE);
+                consumeItem();
+            }
+            else if(purchase.getSku().equals(ITEM_50_LIFE)){
+                Log.i(TAG, "Purchase ITEM : " + ITEM_50_LIFE);
                 consumeItem();
             }
         }

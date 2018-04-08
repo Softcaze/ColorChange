@@ -224,7 +224,7 @@ public class World implements Serializable {
                 this.addLevel(lvl_w1);
 
                 l26_w1.add(R.color.light_grey);l26_w1.add(R.color.yellow);;l26_w1.add(R.color.dark_grey);
-                lvl_w1 = new Level(26, 160, 122, 185, 224, l26_w1, hauteur/1000,0, hauteur/4);
+                lvl_w1 = new Level(26, 160, 110, 152, 190, l26_w1, hauteur/1000,0, hauteur/4);
                 this.addLevel(lvl_w1);
 
                 l27_w1.add(R.color.green);l27_w1.add(R.color.yellow);;l27_w1.add(R.color.blue);
@@ -342,40 +342,40 @@ public class World implements Serializable {
                 lvl_w2 = new Level(21, 130, 35, 52, 70, l21_w2, hauteur/800,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
-                l22_w2.add(R.color.yellow);l22_w2.add(R.color.dark_grey);l22_w2.add(R.color.green);
-                lvl_w2 = new Level(22, 155, 30, 50, 90, l22_w2, hauteur/150,0, hauteur/5);
+                l22_w2.add(R.color.blue);l22_w2.add(R.color.red);l22_w2.add(R.color.yellow);l22_w2.add(R.color.green);
+                lvl_w2 = new Level(22, 170, 110, 140, 165, l22_w2, hauteur/800,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
-                l23_w2.add(R.color.yellow);l23_w2.add(R.color.dark_grey);l23_w2.add(R.color.green);
-                lvl_w2 = new Level(23, 155, 30, 50, 90, l23_w2, hauteur/150,0, hauteur/5);
+                l23_w2.add(R.color.yellow);l23_w2.add(R.color.red);l23_w2.add(R.color.dark_grey);l23_w2.add(R.color.light_grey);
+                lvl_w2 = new Level(23, 170, 100, 150, 180, l23_w2, hauteur/800,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
-                l24_w2.add(R.color.yellow);l24_w2.add(R.color.dark_grey);l24_w2.add(R.color.green);
-                lvl_w2 = new Level(24, 155, 30, 50, 90, l24_w2, hauteur/150,0, hauteur/5);
+                l24_w2.add(R.color.red);l24_w2.add(R.color.light_grey);l24_w2.add(R.color.green);l24_w2.add(R.color.blue);
+                lvl_w2 = new Level(24, 155, 85, 110, 135, l24_w2, hauteur/800,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
-                l25_w2.add(R.color.yellow);l25_w2.add(R.color.dark_grey);l25_w2.add(R.color.green);
-                lvl_w2 = new Level(25, 155, 30, 50, 90, l25_w2, hauteur/150,0, hauteur/5);
+                l25_w2.add(R.color.yellow);l25_w2.add(R.color.dark_grey);l25_w2.add(R.color.green);l25_w2.add(R.color.light_grey);
+                lvl_w2 = new Level(25, 150, 40, 60, 80, l25_w2, hauteur/500,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
-                l26_w2.add(R.color.yellow);l26_w2.add(R.color.dark_grey);l26_w2.add(R.color.green);
-                lvl_w2 = new Level(26, 155, 30, 50, 90, l26_w2, hauteur/150,0, hauteur/5);
+                l26_w2.add(R.color.yellow);l26_w2.add(R.color.dark_grey);l26_w2.add(R.color.blue);l26_w2.add(R.color.red);
+                lvl_w2 = new Level(26, 145, 40, 60, 80, l26_w2, hauteur/500,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
-                l27_w2.add(R.color.yellow);l27_w2.add(R.color.dark_grey);l27_w2.add(R.color.green);
-                lvl_w2 = new Level(27, 155, 30, 50, 90, l27_w2, hauteur/150,0, hauteur/5);
+                l27_w2.add(R.color.green);l27_w2.add(R.color.yellow);l27_w2.add(R.color.blue);l27_w2.add(R.color.red);
+                lvl_w2 = new Level(27, 145, 45, 65, 90, l27_w2, hauteur/500,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
-                l28_w2.add(R.color.yellow);l28_w2.add(R.color.dark_grey);l28_w2.add(R.color.green);
-                lvl_w2 = new Level(28, 155, 30, 50, 90, l28_w2, hauteur/150,0, hauteur/5);
+                l28_w2.add(R.color.light_grey);l28_w2.add(R.color.green);l28_w2.add(R.color.dark_grey);l28_w2.add(R.color.blue);
+                lvl_w2 = new Level(28, 140, 25, 40, 60, l28_w2, hauteur/800,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
-                l29_w2.add(R.color.yellow);l29_w2.add(R.color.dark_grey);l29_w2.add(R.color.green);
-                lvl_w2 = new Level(29, 155, 30, 50, 90, l29_w2, hauteur/150,0, hauteur/5);
+                l29_w2.add(R.color.light_grey);l29_w2.add(R.color.dark_grey);l29_w2.add(R.color.blue);l29_w2.add(R.color.red);
+                lvl_w2 = new Level(29, 140, 28, 50, 70, l29_w2, hauteur/800,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
-                l30_w2.add(R.color.yellow);l30_w2.add(R.color.dark_grey);l30_w2.add(R.color.green);
-                lvl_w2 = new Level(30, 155, 30, 50, 90, l30_w2, hauteur/150,0, hauteur/5);
+                l30_w2.add(R.color.dark_grey);l30_w2.add(R.color.green);l30_w2.add(R.color.red);l30_w2.add(R.color.blue);
+                lvl_w2 = new Level(30, 125, 32, 48, 60, l30_w2, hauteur/800,0, hauteur/4);
                 this.addLevel(lvl_w2);
 
                 break;
@@ -391,7 +391,7 @@ public class World implements Serializable {
 
                 l2_w3.add(R.color.blue);l2_w3.add(R.color.yellow);l2_w3.add(R.color.green);
                 l2_w3.add(R.color.red);l2_w3.add(R.color.dark_grey);l2_w3.add(R.color.light_grey);
-                lvl_w3 = new Level(2, 150, 20, 40, 60, l2_w3, hauteur/260,0, hauteur/3);
+                lvl_w3 = new Level(2, 300, 20, 40, 60, l2_w3, hauteur/400,0, hauteur/4);
                 this.addLevel(lvl_w3);
                 break;
             case 4:

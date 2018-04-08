@@ -65,10 +65,10 @@ public class PlayActivity extends Activity {
 
         format = new SimpleDateFormat("mm:ss");
 
-        w1 = new World(1, getResources().getString(R.string.tab_text_1) +  " 1", R.drawable.americanfootball, 0, HAUTEUR_ECRAN);
-        w2 = new World(2, getResources().getString(R.string.tab_text_1) +  " 2", R.drawable.racing, 10, HAUTEUR_ECRAN);
-        w3 = new World(3, getResources().getString(R.string.tab_text_1) +  " 3", R.drawable.aireplane, 20, HAUTEUR_ECRAN);
-        w4 = new World(4, getResources().getString(R.string.tab_text_1) +  " 4", R.drawable.kayak, 30, HAUTEUR_ECRAN);
+        w1 = new World(1, getResources().getString(R.string.tab_text_1) +  " 1", R.drawable.americanfootball, Constance.NBR_STAR_UNLOCK_W1, HAUTEUR_ECRAN);
+        w2 = new World(2, getResources().getString(R.string.tab_text_1) +  " 2", R.drawable.racing, Constance.NBR_STAR_UNLOCK_W2, HAUTEUR_ECRAN);
+        w3 = new World(3, getResources().getString(R.string.tab_text_1) +  " 3", R.drawable.aireplane, Constance.NBR_STAR_UNLOCK_W3, HAUTEUR_ECRAN);
+        w4 = new World(4, getResources().getString(R.string.tab_text_1) +  " 4", R.drawable.kayak, Constance.NBR_STAR_UNLOCK_W4, HAUTEUR_ECRAN);
 
         listWorld.add(w1);
         listWorld.add(w2);

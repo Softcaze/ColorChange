@@ -32,6 +32,12 @@ public class Constance {
     // => DIFINIS LA TAILLE DE L'IMAGE
     public static final int NBR_COLUMN = 6;
 
+    // NBR STAR UNLOCK WORLD
+    public static final int NBR_STAR_UNLOCK_W1 = 0;
+    public static final int NBR_STAR_UNLOCK_W2 = 0;
+    public static final int NBR_STAR_UNLOCK_W3 = 0;
+    public static final int NBR_STAR_UNLOCK_W4 = 0;
+
     // ETAT DE LA PARTIE
     public static final int TUTORIEL = 1;
     public static final int EN_JEU = 2;
