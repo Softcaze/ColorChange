@@ -27,12 +27,15 @@ import com.softcaze.nicolas.colorchange.R;
 
 import org.w3c.dom.Text;
 
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Random;
 import java.util.TimeZone;
 
 public class MainActivity extends FragmentActivity {
@@ -81,6 +84,15 @@ public class MainActivity extends FragmentActivity {
         format = new SimpleDateFormat("mm:ss");
 
         dao.open();
+
+        if(dao.getPayLoad() == ""){
+            RandomString randomString = new RandomString(36);
+
+            String payLoad = randomString.nextString();
+
+            dao.setPayLoad(payLoad);
+        }
+
         if(dao.getStateSound() == -1){
             dao.setStateSound(Constance.SOUND_ENABLE);
         }
@@ -477,6 +489,50 @@ public class MainActivity extends FragmentActivity {
         }
         catch (Exception e){
             Log.i("List Level Activity", "Sounds play : " + e);
+        }
+    }
+
+    private static final char[] symbols = new char[36];
+
+    static {
+        for (int idx = 0; idx < 10; ++idx)
+            symbols[idx] = (char) ('0' + idx);
+        for (int idx = 10; idx < 36; ++idx)
+            symbols[idx] = (char) ('a' + idx - 10);
+    }
+
+    public class RandomString {
+
+        /*
+         * static { for (int idx = 0; idx < 10; ++idx) symbols[idx] = (char)
+         * ('0' + idx); for (int idx = 10; idx < 36; ++idx) symbols[idx] =
+         * (char) ('a' + idx - 10); }
+         */
+
+        private final Random random = new Random();
+
+        private final char[] buf;
+
+        public RandomString(int length) {
+            if (length < 1)
+                throw new IllegalArgumentException("length < 1: " + length);
+            buf = new char[length];
+        }
+
+        public String nextString() {
+            for (int idx = 0; idx < buf.length; ++idx)
+                buf[idx] = symbols[random.nextInt(symbols.length)];
+            return new String(buf);
+        }
+
+    }
+
+    public final class SessionIdentifierGenerator {
+
+        private SecureRandom random = new SecureRandom();
+
+        public String nextSessionId() {
+            return new BigInteger(130, random).toString(32);
         }
     }
 }

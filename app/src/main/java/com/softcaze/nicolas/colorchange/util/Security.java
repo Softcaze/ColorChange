@@ -19,6 +19,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
+import com.softcaze.nicolas.colorchange.BuildConfig;
+
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -56,12 +58,17 @@ public class Security {
         if (TextUtils.isEmpty(signedData) || TextUtils.isEmpty(base64PublicKey) ||
                 TextUtils.isEmpty(signature)) {
             Log.e(TAG, "Purchase verification failed: missing data.");
+
+            if (BuildConfig.DEBUG) {
+                return true;
+            }
             return false;
         }
 
         PublicKey key = Security.generatePublicKey(base64PublicKey);
         return Security.verify(key, signedData, signature);
     }
+
 
     /**
      * Generates a PublicKey instance from a string containing the

@@ -11,6 +11,7 @@ import com.softcaze.nicolas.colorchange.Database.DatabaseHandler;
 import com.softcaze.nicolas.colorchange.R;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Created by Nicolas on 20/02/2018.
@@ -127,5 +128,9 @@ public class Constance {
         else{
             return nbr;
         }
+    }
+
+    public static String getCountry(){
+        return Locale.getDefault().getCountry();
     }
 }

@@ -123,6 +123,7 @@
                 android:layout_toRightOf="@id/heart_2"/>
 
             <RelativeLayout
+                android:id="@+id/rel_price5Life"
                 android:layout_width="75dp"
                 android:background="@drawable/rounded_white_dark_grey_hard"
                 android:layout_alignParentRight="true"
@@ -172,6 +173,7 @@
                 android:layout_toRightOf="@id/heart_3"/>
 
             <RelativeLayout
+                android:id="@+id/rel_price10Life"
                 android:layout_width="75dp"
                 android:soundEffectsEnabled="false"
                 android:background="@drawable/rounded_white_dark_grey_hard"
@@ -221,6 +223,7 @@
                 android:layout_toRightOf="@id/heart_4"/>
 
             <RelativeLayout
+                android:id="@+id/rel_price25Life"
                 android:layout_width="75dp"
                 android:soundEffectsEnabled="false"
                 android:background="@drawable/rounded_white_dark_grey_hard"
@@ -270,6 +273,7 @@
                 android:layout_toRightOf="@id/heart_5"/>
 
             <RelativeLayout
+                android:id="@+id/rel_price50Life"
                 android:layout_width="75dp"
                 android:soundEffectsEnabled="false"
                 android:background="@drawable/rounded_white_dark_grey_hard"
@@ -291,5 +295,19 @@
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rel_progress_bar"
+        android:background="@color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:layout_centerInParent="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 public class DAO {
-    public static int VERSION = 67;
+    public static int VERSION = 68;
     public static String NOM_DB = "colorchangedatabase.db";
 
     public static final String NOM_TABLE_USER = "user";
@@ -30,6 +30,10 @@ public class DAO {
     public static final int NUM_COL_FIRST_UTILISATION = 2;
     public static final String COL_TIME_LAST_LIFE = "time_last_life";
     public static final int NUM_COL_TIME_LAST_LIFE = 3;
+
+    public static final String NOM_TABLE_PAY_LOAD = "table_pay_load";
+    public static final String COL_PAY_LOAD = "pay_load";
+    public static final int NUM_COL_PAY_LOAD = 0;
 
     public static final String NOM_TABLE_SOUND = "sound";
     public static final String COL_ENABLE_SOUND = "enable_sound";
@@ -331,5 +335,34 @@ public class DAO {
         }
 
         return -1;
+    }
+
+    public String getPayLoad(){
+        String payLoad = "";
+
+        Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_PAY_LOAD, null);
+
+        if(c.getCount() != 0){
+            c.moveToFirst();
+
+            return  c.getString(NUM_COL_PAY_LOAD);
+        }
+
+        return payLoad;
+    }
+
+    public void setPayLoad(String payLoad){
+        Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_PAY_LOAD, null);
+        ContentValues values = new ContentValues();
+        values.put(COL_PAY_LOAD, payLoad);
+
+        if(c.getCount() == 0){
+            try{
+                database.insert(NOM_TABLE_PAY_LOAD, null, values);
+            }
+            catch(Exception e){
+                Log.i("SET PAY LOAD INSERT", "Exception : " + e);
+            }
+        }
     }
 }
