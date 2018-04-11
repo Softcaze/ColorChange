@@ -59,9 +59,9 @@ public class Security {
                 TextUtils.isEmpty(signature)) {
             Log.e(TAG, "Purchase verification failed: missing data.");
 
-            if (BuildConfig.DEBUG) {
+            /*if (BuildConfig.DEBUG) {
                 return true;
-            }
+            }*/
             return false;
         }
 

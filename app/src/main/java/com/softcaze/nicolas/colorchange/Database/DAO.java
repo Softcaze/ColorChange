@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.softcaze.nicolas.colorchange.Model.Constance;
 import com.softcaze.nicolas.colorchange.Model.Level;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 
 public class DAO {
-    public static int VERSION = 68;
+    public static int VERSION = 75;
     public static String NOM_DB = "colorchangedatabase.db";
 
     public static final String NOM_TABLE_USER = "user";
@@ -38,6 +39,10 @@ public class DAO {
     public static final String NOM_TABLE_SOUND = "sound";
     public static final String COL_ENABLE_SOUND = "enable_sound";
     public static final int NUM_COL_ENABLE_SOUND = 0;
+
+    public static final String NOM_TABLE_COUNT_AD = "table_count_ad";
+    public static final String COL_COUNT_AD = "count_ad";
+    public static final int NUM_COL_COUNT_AD = 0;
 
     public static final String NOM_TABLE_LEVEL = "level";
     public static final String COL_ID_LEVEL = "id_level";
@@ -364,5 +369,41 @@ public class DAO {
                 Log.i("SET PAY LOAD INSERT", "Exception : " + e);
             }
         }
+    }
+
+    public void setCountAD(Integer count){
+        Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_COUNT_AD, null);
+        ContentValues values = new ContentValues();
+
+        if(c.getCount() == 0){
+            try{
+                values.put(COL_COUNT_AD, 0);
+                database.insert(NOM_TABLE_COUNT_AD, null, values);
+            }
+            catch(Exception e){
+                Log.i("SET COUNT AD INSERT", "Exception : " + e);
+            }
+        }
+        else{
+            try{
+                values.put(COL_COUNT_AD, count);
+                database.update(NOM_TABLE_COUNT_AD, values, null, null);
+            }
+            catch(Exception e){
+                Log.i("SET COUNT AD UPDATE", "Exception : " + e);
+            }
+        }
+    }
+
+    public Integer getCountAD(){
+        Cursor c = database.rawQuery("SELECT * FROM " + NOM_TABLE_COUNT_AD, null);
+
+        if(c.getCount() != 0){
+            c.moveToFirst();
+
+            return c.getInt(NUM_COL_COUNT_AD);
+        }
+
+        return -1;
     }
 }

@@ -71,7 +71,7 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
 
         if(Game.task != null){
             if(!Game.task.isCancelled()){
-                dao.open();
+                /*dao.open();
 
                 if(dao.getNbrLife() > 0){
                     user.setNbrLife(user.getNbrLife() - 1);
@@ -82,7 +82,7 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
                     }
                 }
 
-                dao.close();
+                dao.close();*/
             }
             Game.task.cancel(true);
         }
@@ -164,10 +164,8 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
 
         dao.open();
 
-        if(dao.getNbrLife() < 10){
-            user.setNbrLife(user.getNbrLife() + 1);
-            dao.setNbrLife(dao.getNbrLife() + 1);
-        }
+        user.setNbrLife(user.getNbrLife() + 1);
+        dao.setNbrLife(dao.getNbrLife() + 1);
 
         dao.close();
 
@@ -185,7 +183,7 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
     }
 
     private void loadRewardedVideoAd(){
-        mRewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
+        mRewardedVideoAd.loadAd("ca-app-pub-9468199307439621/4798829214",
                 new AdRequest.Builder().build());
     }
 }

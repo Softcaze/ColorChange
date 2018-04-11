@@ -32,13 +32,14 @@
 
     </RelativeLayout>
     <LinearLayout
+        android:layout_centerInParent="true"
         android:layout_below="@id/header_shop"
         android:layout_width="match_parent"
         android:layout_marginTop="40dp"
         android:orientation="vertical"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <!--<RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/rounded_white_hard"
@@ -93,7 +94,7 @@
                     android:text="@string/shop_free"/>
 
             </RelativeLayout>
-        </RelativeLayout>
+        </RelativeLayout> -->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -135,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:layout_centerHorizontal="true"
@@ -185,7 +186,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:layout_centerHorizontal="true"
@@ -235,7 +236,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_centerHorizontal="true"
                     android:layout_marginRight="15dp"
@@ -285,7 +286,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:layout_centerHorizontal="true"
                     android:layout_marginRight="15dp"

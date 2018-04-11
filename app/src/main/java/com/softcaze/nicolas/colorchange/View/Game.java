@@ -15,10 +15,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.softcaze.nicolas.colorchange.Activity.ListLevelActivity;
+import com.softcaze.nicolas.colorchange.Activity.LoadingActivity;
 import com.softcaze.nicolas.colorchange.Activity.MainActivity;
 import com.softcaze.nicolas.colorchange.Activity.ShopActivity;
 import com.softcaze.nicolas.colorchange.Activity.TransitionActivityView;
@@ -101,6 +104,7 @@ public class Game extends View {
 
     protected int btnHeight = 0;
     protected List<World> listWorld = new ArrayList<World>();
+    protected InterstitialAd interAd;
 
     public static ManagerDoor task;
     public static AnimImageY taskAnimY;
@@ -121,7 +125,9 @@ public class Game extends View {
     protected Vehicule vehicTuto;
     protected Global varGlobal;
 
-    public Game(Context context, int largeur, int hauteur, Level myLevel, World w, List<World> worlds, RewardedVideoAd ad, User u, EtatGame etat) {
+    protected int countADInterstitel = 0;
+
+    public Game(final Context context, int largeur, int hauteur, Level myLevel, World w, List<World> worlds, RewardedVideoAd ad, User u, EtatGame etat) {
         super(context);
 
         LARGEUR_ECRAN = largeur;
@@ -140,6 +146,8 @@ public class Game extends View {
         btnPause.setY(HAUTEUR_ECRAN / 30 - logoPause.getHeight() / 2);
 
         dao.open();
+
+        countADInterstitel = dao.getCountAD();
 
         etatGame = etat;
 
@@ -176,6 +184,12 @@ public class Game extends View {
         if(levelActu.getCouleurs().size() > 3){
             laneColor.setY(laneColor.getY() - HAUTEUR_ECRAN/25);
         }
+
+        interAd = new InterstitialAd(context);
+        interAd.setAdUnitId(context.getResources().getString(R.string.interstitial_unit_id));
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interAd.loadAd(adRequest);
     }
 
     @Override
@@ -301,21 +315,21 @@ public class Game extends View {
                     score++;
                 } else {
                     playSounds(gameOver);
-                    // L'utilisateur perd une vie si il obtient 0 étoiles
-                    if(score < levelActu.getScoreStar1()){
-                        if(user.getNbrLife() > 0){
-                            user.setNbrLife(user.getNbrLife() - 1);
+                    // L'utilisateur ne perd pas de vie si il obtient plus de 1 étoile
+                    if(score >= levelActu.getScoreStar1()){
+                        //if(user.getNbrLife() > 0){
+                            user.setNbrLife(user.getNbrLife() + 1);
 
                             dao.open();
 
-                            if(dao.getTimeLastLife().equals("")){
+                           /* if(dao.getTimeLastLife().equals("")){
                                 dao.saveTimeLastLife(String.valueOf(System.currentTimeMillis()));
-                            }
+                            }*/
 
-                            dao.setNbrLife(dao.getNbrLife() - 1);
+                            dao.setNbrLife(dao.getNbrLife() + 1);
 
                             dao.close();
-                        }
+                        //}
                     }
 
                     int nbrStarMyScore = 0;
@@ -727,11 +741,31 @@ public class Game extends View {
                     task = new ManagerDoor(getContext(), levelActu.getCouleurs(), listVehicules, LARGEUR_ECRAN, HAUTEUR_ECRAN, vehiculeColorMap, nbrColumn, levelActu.getDistance());
                 }
             }
+
+            if (interAd.isLoaded()) {
+                if(etatGame.getEtat() == Constance.END) {
+                    if(countADInterstitel >= 4){
+                        try{
+                            interAd.show();
+                            countADInterstitel = 0;
+
+                            dao.open();
+                                dao.setCountAD(0);
+                            dao.close();
+                        }
+                        catch (Exception e){
+
+                        }
+                    }
+                }
+            }
         }
 
         if(popup.isDisplay()){
             popup.display(canvas, LARGEUR_ECRAN, HAUTEUR_ECRAN, getContext());
         }
+
+
         invalidate();
     }
 
@@ -830,6 +864,31 @@ public class Game extends View {
                 }
 
                 etatGame.setEtat(Constance.EN_JEU);
+
+                AdRequest adRequest = new AdRequest.Builder().build();
+                interAd.loadAd(adRequest);
+
+                countADInterstitel = countADInterstitel + 1;
+
+                dao.open();
+
+                dao.setCountAD(dao.getCountAD() + 1);
+
+                dao.close();
+
+                if(user.getNbrLife() > 0){
+                    user.setNbrLife(user.getNbrLife() - 1);
+
+                    dao.open();
+
+                    if(dao.getTimeLastLife().equals("")){
+                        dao.saveTimeLastLife(String.valueOf(System.currentTimeMillis()));
+                    }
+
+                    dao.setNbrLife(dao.getNbrLife() - 1);
+
+                    dao.close();
+                }
             }
         }
         else if(etatGame.getEtat() == Constance.EN_JEU){
@@ -950,7 +1009,26 @@ public class Game extends View {
                         }
                     }
                     else{
-                        Toast.makeText(getContext(), "Plus de vie", Toast.LENGTH_LONG).show();
+                        etatGame.setEtat(Constance.POPUP_OPEN);
+                        // Création popup plus de vie
+                        float width = LARGEUR_ECRAN - LARGEUR_ECRAN/10;
+                        float height = HAUTEUR_ECRAN - HAUTEUR_ECRAN/3 - HAUTEUR_ECRAN/10;
+                        float x = LARGEUR_ECRAN/10;
+                        float y = HAUTEUR_ECRAN/4;
+                        TextInView title = new TextInView(getContext().getResources().getString(R.string.title_popin_no_life));
+                        TextInView content = new TextInView(getContext().getResources().getString(R.string.content_popin_no_life));
+                        btn1 = new TextInView(getContext().getResources().getString(R.string.btn1_popin_no_life));
+                        btn2 = new TextInView(getContext().getResources().getString(R.string.btn2_popin_no_life));
+
+                        popup.setX(x);
+                        popup.setY(y);
+                        popup.setWidth(width);
+                        popup.setHeight(height);
+                        popup.setDisplay(true);
+                        popup.setTitle(title);
+                        popup.setContent(content);
+                        popup.setBtn1(btn1);
+                        popup.setBtn2(btn2);
                     }
                 }
             }

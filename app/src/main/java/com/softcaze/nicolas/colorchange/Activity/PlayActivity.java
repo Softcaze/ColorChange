@@ -39,7 +39,7 @@ public class PlayActivity extends Activity {
     User user;
     ImageView circle_w1, circle_w2, circle_w3, circle_w4, heart;
     View lane_1_w2, lane_1_w3, lane_1_w4, lane_3_w2, lane_3_w3, lane_3_w4;
-    RelativeLayout lane_2_w2, lane_2_w3, lane_2_w4;
+    RelativeLayout lane_2_w2, lane_2_w3, lane_2_w4, relative_life;
     TextView nbrLife, timeLife, btn_popin;
     protected DAO dao = null;
     protected int HAUTEUR_ECRAN;
@@ -100,6 +100,14 @@ public class PlayActivity extends Activity {
         loadDataBDD();
 
         checkLockWorld();
+
+        relative_life.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PlayActivity.this, ShopActivity.class);
+                startActivity(intent);
+            }
+        });
 
         /***********************************/
         /*** SET ON CLICK ONGLET "WORLD" ***/
@@ -323,6 +331,8 @@ public class PlayActivity extends Activity {
         lane_2_w2 = (RelativeLayout) findViewById(R.id.lane_2_w2);
         lane_2_w3 = (RelativeLayout) findViewById(R.id.lane_2_w3);
         lane_2_w4 = (RelativeLayout) findViewById(R.id.lane_2_w4);
+
+        relative_life = (RelativeLayout) findViewById(R.id.relative_life);
 
         // SET NAME WORLD
         txt_monde_1.setText(w1.getName());

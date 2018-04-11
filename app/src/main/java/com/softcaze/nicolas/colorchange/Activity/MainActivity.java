@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity {
     protected Calendar dateActu = Calendar.getInstance();
     protected SimpleDateFormat format;
     protected Calendar dateLastLife = Calendar.getInstance();
-    protected RelativeLayout popinTime, containerPopin;
+    protected RelativeLayout popinTime, containerPopin, relative_life;
     protected LinearLayout mainLinear;
     protected static CheckAutoTime taskCheckAutoTime;
     protected MediaPlayer clickBtn;
@@ -63,6 +63,7 @@ public class MainActivity extends FragmentActivity {
 
         popinTime = (RelativeLayout) findViewById(R.id.popinTime);
         containerPopin = (RelativeLayout) findViewById(R.id.containerPopin);
+        relative_life = (RelativeLayout) findViewById(R.id.relative_life);
         btn_play = (TextView) findViewById(R.id.btn_play);
         btn_setting = (TextView) findViewById(R.id.btn_setting);
         btn_shop = (TextView) findViewById(R.id.btn_shop);
@@ -133,6 +134,10 @@ public class MainActivity extends FragmentActivity {
             nbrLife.setText("" + Constance.NBR_LIFE_MAX);
         }
 
+        if(dao.getCountAD() == -1){
+            dao.setCountAD(0);
+        }
+
         user.setNbrLife(dao.getNbrLife());
         nbrLife.setText("" + dao.getNbrLife());
 
@@ -175,6 +180,14 @@ public class MainActivity extends FragmentActivity {
         }
 
         dao.close();
+
+        relative_life.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ShopActivity.class);
+                startActivity(intent);
+            }
+        });
 
         /**
          * CLICK ON PLAY

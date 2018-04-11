@@ -18,6 +18,7 @@ import com.softcaze.nicolas.colorchange.util.IabHelper;
 import com.softcaze.nicolas.colorchange.util.IabResult;
 import com.softcaze.nicolas.colorchange.util.Inventory;
 import com.softcaze.nicolas.colorchange.util.Purchase;
+import com.softcaze.nicolas.colorchange.util.SkuDetails;
 
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+
+
 
 public class ShopActivity extends AppCompatActivity {
     protected TextView price5Life, price10Life, price25Life, price50Life;
@@ -48,11 +51,9 @@ public class ShopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
 
-        InputStream inputStream = getResources().openRawResource(R.raw.in_app_products_com_softcaze_nicolas_colorchange);
-        CSVFile csvFile = new CSVFile(inputStream);
-        List priceCountry = csvFile.read();
-
-        Log.i(TAG, "Price Country : " + getPrice(ITEM_5_LIFE, priceCountry));
+        /*InputStream inputStream = getResources().openRawResource(R.raw.in_app_products_com_softcaze_nicolas_colorchange);
+        CSVFile csvFile = new CSVFile(inputStream);*/
+        //List priceCountry = csvFile.read();
 
         myActivity = this;
 
@@ -67,10 +68,10 @@ public class ShopActivity extends AppCompatActivity {
         rel_price25Life = (RelativeLayout) findViewById(R.id.rel_price25Life);
         rel_price50Life = (RelativeLayout) findViewById(R.id.rel_price50Life);
 
-        price5Life.setText(getPrice(ITEM_5_LIFE, priceCountry));
+        /*price5Life.setText(getPrice(ITEM_5_LIFE, priceCountry));
         price10Life.setText(getPrice(ITEM_10_LIFE, priceCountry));
         price25Life.setText(getPrice(ITEM_25_LIFE, priceCountry));
-        price50Life.setText(getPrice(ITEM_50_LIFE, priceCountry));
+        price50Life.setText(getPrice(ITEM_50_LIFE, priceCountry));*/
 
         String base64EncodedPublicKey =
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm/aiy+l5cxM2bNJnY01NIlWn21Kx36UUu6exedJPBtItCTVU/vznRvP3sJ+be2c7Z3ois11GqiGYysVZJEso0IZW13Abdzbwxwma44S271zh9tVDm8poIBvs3BH4db4k9LkYg/tG1twS9LUjwHY0oSsTuUEn0KZ91CXUnX9yinW4yQrTCKf846VKZY5+yvmhXZ6rIZKeXzUo18JD00j3NBF2Pg00a2nzNkT1ctY9s5Yve/44fujNWTbbaXBUc68fMMSaul5/ve+UnPjuzcpSDgKEvVrwrX3bxeolDW9UUbSb9bDd1LFMVlevJeBzdDr1Ue12+Q700oGfdLa89CfQHQIDAQAB";
@@ -85,7 +86,8 @@ public class ShopActivity extends AppCompatActivity {
                             result);
                 } else {
                     Log.d(TAG, "In-app Billing is set up OK");
-                    rel_progress_bar.setVisibility(View.GONE);
+
+                    updatePrice();
                 }
             }
         });
@@ -108,8 +110,6 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ITEM_CLICKED = ITEM_10_LIFE;
-
-                Log.i(TAG, "REL PRICE 10 LIFE");
 
                 try{
                     mHelper.launchPurchaseFlow(myActivity, ITEM_10_LIFE, 10001,
@@ -159,6 +159,7 @@ public class ShopActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         @Override
@@ -326,7 +327,7 @@ public class ShopActivity extends AppCompatActivity {
         return payLoad;
     }
 
-    public String getPrice(String item, List list){
+    /*public String getPrice(String item, List list){
         Float price = -1f;
 
         switch (item){
@@ -381,5 +382,43 @@ public class ShopActivity extends AppCompatActivity {
         }
 
         return result;
+    }*/
+
+    public void updatePrice(){
+        rel_progress_bar.setVisibility(View.GONE);
+        ArrayList<String> skuItems = new ArrayList<String>();
+        skuItems.add(ITEM_5_LIFE);
+        skuItems.add(ITEM_10_LIFE);
+        skuItems.add(ITEM_25_LIFE);
+        skuItems.add(ITEM_50_LIFE);
+
+        mHelper.queryInventoryAsync(true, skuItems, new IabHelper.QueryInventoryFinishedListener() {
+            @Override
+            public void onQueryInventoryFinished(IabResult result, Inventory inv) {
+                if(result.isSuccess()) {
+                    SkuDetails details = inv.getSkuDetails(ITEM_5_LIFE);
+                    String price = details.getPrice();
+                    price5Life.setText(price);
+
+                    details = inv.getSkuDetails(ITEM_10_LIFE);
+                    price = details.getPrice();
+                    price10Life.setText(price);
+
+                    details = inv.getSkuDetails(ITEM_25_LIFE);
+                    price = details.getPrice();
+                    price25Life.setText(price);
+
+                    details = inv.getSkuDetails(ITEM_50_LIFE);
+                    price = details.getPrice();
+                    price50Life.setText(price);
+                } else {
+                    price5Life.setText(R.string.cant_get_prices);
+                    price10Life.setText(R.string.cant_get_prices);
+                    price25Life.setText(R.string.cant_get_prices);
+                    price50Life.setText(R.string.cant_get_prices);
+                }
+            }
+        });
     }
 }
+

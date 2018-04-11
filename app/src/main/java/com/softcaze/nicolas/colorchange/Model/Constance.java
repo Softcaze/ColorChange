@@ -35,9 +35,9 @@ public class Constance {
 
     // NBR STAR UNLOCK WORLD
     public static final int NBR_STAR_UNLOCK_W1 = 0;
-    public static final int NBR_STAR_UNLOCK_W2 = 0;
-    public static final int NBR_STAR_UNLOCK_W3 = 0;
-    public static final int NBR_STAR_UNLOCK_W4 = 0;
+    public static final int NBR_STAR_UNLOCK_W2 = 60;
+    public static final int NBR_STAR_UNLOCK_W3 = 120;
+    public static final int NBR_STAR_UNLOCK_W4 = 180;
 
     // ETAT DE LA PARTIE
     public static final int TUTORIEL = 1;
@@ -75,7 +75,7 @@ public class Constance {
     public static final int STEP_8 = 8;
 
     public static final int NBR_LIFE_MAX = 5;
-    public static final long TIME_BETWEEN_LIFE = 1; // Minutes
+    public static final long TIME_BETWEEN_LIFE = 30; // Minutes
 
     public static int getDpSize(float v, Context c){
         float value = v; // margin in dips

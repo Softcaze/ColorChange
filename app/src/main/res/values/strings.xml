@@ -62,4 +62,6 @@
     <string name="btn1_popin_no_life">SHOP</string>
     <string name="btn2_popin_no_life">OK</string>
     <string name="setting_langue1">EN</string>
+    <string name="cant_get_prices">NAN</string>
+    <string name="interstitial_unit_id">ca-app-pub-9468199307439621/3533014850</string>
 </resources>

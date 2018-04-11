@@ -23,11 +23,6 @@
         <activity
             android:name=".Activity.MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Activity.PlayActivity"
@@ -50,9 +45,19 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent" />
-        <activity android:name=".Activity.SettingsActivity" />
-        <activity android:name=".Activity.ShopActivity" />
-        <activity android:name=".Activity.ContactFormActivity"></activity>
+        <activity android:name=".Activity.SettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.ShopActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.ContactFormActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activity.LoadingActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

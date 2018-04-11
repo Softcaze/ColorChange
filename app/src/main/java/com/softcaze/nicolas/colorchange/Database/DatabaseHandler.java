@@ -23,6 +23,10 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public static final String COL_PAY_LOAD = "pay_load";
     public static final int NUM_COL_PAY_LOAD = 0;
 
+    public static final String NOM_TABLE_COUNT_AD = "table_count_ad";
+    public static final String COL_COUNT_AD = "count_ad";
+    public static final int NUM_COL_COUNT_AD = 0;
+
     public static final String NOM_TABLE_SOUND = "sound";
     public static final String COL_ENABLE_SOUND = "enable_sound";
     public static final int NUM_COL_ENABLE_SOUND = 0;
@@ -55,6 +59,9 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public static final String CREATE_TABLE_SOUND = "CREATE TABLE IF NOT EXISTS " + NOM_TABLE_SOUND + " (" +
             COL_ENABLE_SOUND + " INTEGER PRIMARY KEY);";
 
+    public static final String CREATE_TABLE_COUNT_AD = "CREATE TABLE IF NOT EXISTS " + NOM_TABLE_COUNT_AD + " (" +
+            COL_COUNT_AD + " INTEGER PRIMARY KEY);";
+
     public static final String CREATE_TABLE_LEVEL = "CREATE TABLE IF NOT EXISTS " + NOM_TABLE_LEVEL + " (" +
             COL_ID_LEVEL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COL_NUM + " INTEGER, " + COL_ID_WORLD_LEVEL + " INTEGER, " + COL_SCORE + " INTEGER);";
@@ -68,6 +75,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     public static final String DROP_TABLE_LEVEL = "DROP TABLE IF EXISTS " + NOM_TABLE_LEVEL + ";";
     public static final String DROP_TABLE_WORLD = "DROP TABLE IF EXISTS " + NOM_TABLE_WORLD + ";";
     public static final String DROP_TABLE_PAY_LOAD = "DROP TABLE IF EXISTS " + NOM_TABLE_PAY_LOAD + ";";
+    public static final String DROP_TABLE_COUNT_AD = "DROP TABLE IF EXISTS " + NOM_TABLE_COUNT_AD + ";";
 
     public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
     {
@@ -81,6 +89,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(CREATE_TABLE_SOUND);
         db.execSQL(CREATE_TABLE_LEVEL);
         db.execSQL(CREATE_TABLE_WORLD);
+        db.execSQL(CREATE_TABLE_COUNT_AD);
     }
 
     @Override
@@ -90,6 +99,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.execSQL(DROP_TABLE_LEVEL);
         db.execSQL(DROP_TABLE_WORLD);
         db.execSQL(DROP_TABLE_PAY_LOAD);
+        db.execSQL(DROP_TABLE_COUNT_AD);
         onCreate(db);
     }
 }

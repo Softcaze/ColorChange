@@ -47,7 +47,7 @@ public class ListLevelActivity extends Activity {
 
     ListLevelAdapter adapter;
     ListView listViewLevel;
-    RelativeLayout popinTime, popinNoLife;
+    RelativeLayout popinTime, popinNoLife, relative_life;
     protected MediaPlayer clickBtn;
 
     SyncIsAutoTime syncAutoTime;
@@ -70,7 +70,7 @@ public class ListLevelActivity extends Activity {
 
         dao = new DAO(this);
 
-        clickBtn = MediaPlayer.create(getApplicationContext(), R.raw.click_btn);
+        Sounds.createSounds(Constance.CLICK_BTN_1, clickBtn, getApplicationContext());
 
         format = new SimpleDateFormat("mm:ss");
 
@@ -118,6 +118,14 @@ public class ListLevelActivity extends Activity {
             @Override
             public void onTaskCompleted(User u) {
                 timeLife.setText(refreshLife(u));
+            }
+        });
+
+        relative_life.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ListLevelActivity.this, ShopActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -304,6 +312,7 @@ public class ListLevelActivity extends Activity {
     }
 
     public void initView(){
+        relative_life = (RelativeLayout) findViewById(R.id.relative_life);
         popinTime = (RelativeLayout) findViewById(R.id.popinTime);
         popinNoLife = (RelativeLayout) findViewById(R.id.popinNoLife);
         txt_monde_1 = (TextView) findViewById(R.id.txt_monde_1);
@@ -584,14 +593,7 @@ public class ListLevelActivity extends Activity {
 
     public void playSounds(MediaPlayer md){
         try{
-            dao.open();
-
-            if(dao.getStateSound() == Constance.SOUND_ENABLE){
-                md.setVolume(1.0f, 1.0f);
-                md.start();
-            }
-
-            dao.close();
+            md.start();
         }
         catch (Exception e){
             Log.i("List Level Activity", "Sounds play : " + e);

@@ -23,6 +23,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/relative_life"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
