@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -224,16 +225,6 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 if(popinTime.getVisibility() != View.VISIBLE) {
-                    dao.open();
-
-                    if (dao.getNbrLife() == 0) {
-                        dao.setNbrLife(10);
-                        Toast.makeText(getApplicationContext(), "Vous obtenes 10 vies supplémentaires", Toast.LENGTH_LONG).show();
-                        nbrLife.setText("" + 10);
-                        user.setNbrLife(dao.getNbrLife());
-                    }
-                    dao.close();
-
                     playSounds(clickBtn);
 
                     Intent intent = new Intent(MainActivity.this, ShopActivity.class);
@@ -265,6 +256,13 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View view) {
                 if(popinTime.getVisibility() != View.VISIBLE){
                     playSounds(clickBtn);
+
+                    final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
                 }
             }
         });

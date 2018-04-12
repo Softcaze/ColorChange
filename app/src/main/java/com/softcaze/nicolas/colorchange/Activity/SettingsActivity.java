@@ -3,6 +3,7 @@ package com.softcaze.nicolas.colorchange.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,14 +11,15 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.softcaze.nicolas.colorchange.BuildConfig;
 import com.softcaze.nicolas.colorchange.Database.DAO;
 import com.softcaze.nicolas.colorchange.Model.Constance;
 import com.softcaze.nicolas.colorchange.R;
 
 public class SettingsActivity extends Activity {
-    protected RelativeLayout son, report_bug;
+    protected RelativeLayout son, report_bug, rate_us;
     protected MediaPlayer clickBtn;
-    protected TextView setting_son_txt;
+    protected TextView setting_son_txt, versionApp;
     protected DAO dao;
 
     @Override
@@ -28,7 +30,11 @@ public class SettingsActivity extends Activity {
         clickBtn = MediaPlayer.create(getApplicationContext(), R.raw.click_btn);
         son = (RelativeLayout)findViewById(R.id.son);
         report_bug = (RelativeLayout)findViewById(R.id.report_bug);
+        rate_us = (RelativeLayout) findViewById(R.id.rate_us);
         setting_son_txt = (TextView) findViewById(R.id.setting_son_txt);
+        versionApp = (TextView) findViewById(R.id.versionApp);
+
+        versionApp.setText(BuildConfig.VERSION_NAME);
         dao = new DAO(this);
 
         loadData();
@@ -60,6 +66,19 @@ public class SettingsActivity extends Activity {
 
                 Intent intent = new Intent(SettingsActivity.this, ContactFormActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        rate_us.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
             }
         });
     }

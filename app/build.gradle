@@ -6,8 +6,8 @@ android {
         applicationId "com.softcaze.nicolas.colorchange"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 102
-        versionName "1.0.2"
+        versionCode 105
+        versionName "1.0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
