@@ -150,11 +150,6 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
         isVideoLoaded = false;
 
         loadRewardedVideoAd();
-
-        if(etat.hasRevive()) {
-            etat.setEtat(Constance.REWARDING);
-        }
-        etat.setHasRevive(false);
     }
 
     @Override
@@ -185,5 +180,7 @@ public class TransitionActivityView extends Activity implements RewardedVideoAdL
     private void loadRewardedVideoAd(){
         mRewardedVideoAd.loadAd("ca-app-pub-9468199307439621/4798829214",
                 new AdRequest.Builder().build());
+
+        Log.i("TRANSISTION"," OUI CA PASSE");
     }
 }
